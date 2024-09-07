@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tikar/utils/app_colors.dart';
 
 class AppLoader {
   static Widget defaultLoader() => const Scaffold(
