@@ -17,7 +17,9 @@ class MyApp extends StatelessWidget {
           builder: ((context, constraints) => constraints.maxWidth > 450
               ? const DesktopHome()
               : const PhoneHome())),
-      theme: ThemeData(fontFamily: "Poppins"),
+      theme: ThemeData(
+          fontFamily: "Poppins",
+          ),
     );
   }
 }

@@ -23,4 +23,28 @@ class AppStrings {
     "Au Cameroon",
     "A l'étranger"
   ];
+  static const rents_state = [
+    "Location Actif",
+    "Location Total",
+    "D'appartement et Autre",
+    "De Maison et Residence"
+  ];
+  static const tenants_state = [
+    "Locataire Acif",
+    "Locataire  Total",
+    "Individue",
+    "Entreprise"
+  ];
+  static const employees_state = [
+    "Employee Acif",
+    "Employee  Total",
+    "Interne",
+    "Enterne"
+  ];
+  static const assets_state = [
+    "Bien Acif",
+    "Bien Total",
+    "Residence",
+    "Immeuble"
+  ];
 }

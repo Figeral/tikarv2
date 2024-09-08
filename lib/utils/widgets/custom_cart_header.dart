@@ -6,11 +6,13 @@ import 'package:tikar/utils/icons_utile.dart';
 import 'package:tikar/utils/mediaquery_manager.dart';
 
 class CustomCartHeader extends StatefulWidget {
+  final List<CardUtile> cardUtile;
   final int selectedIndex;
   final Function(int index) onSelected;
 
   const CustomCartHeader({
     super.key,
+    required this.cardUtile,
     required this.selectedIndex,
     required this.onSelected,
   });
@@ -25,42 +27,32 @@ class _CustomCartHeaderState extends State<CustomCartHeader> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 50),
-      child: SizedBox(
+      child: Container(
           width: context.width * 0.6,
-          height: context.height * 0.32,
+          //height: context.height * 0.32,
+          constraints: const BoxConstraints(maxHeight: 320),
           child: Card(
+            color: AppColors.white,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 100,
-                  height: 100,
+                  margin: const EdgeInsets.only(left: 30, top: 20),
+                  width: 250,
+                  height: 120,
                   color: AppColors.black,
                 ),
                 SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildNavItem(CardUtile(
-                        name: AppStrings.lessors_state[0],
-                        value: 0,
-                        icon: Icons.manage_accounts_outlined)),
-                    _buildNavItem(CardUtile(
-                        name: AppStrings.lessors_state[1],
-                        value: 1,
-                        icon: Icons.man)),
-                    _buildNavItem(CardUtile(
-                      name: AppStrings.lessors_state[2],
-                      value: 2,
-                      otherIcon: "assets/images/cameroon.svg",
-                    )),
-                    _buildNavItem(CardUtile(
-                        name: AppStrings.lessors_state[3],
-                        value: 3,
-                        icon: Icons.rocket_launch_outlined)),
+                    _buildNavItem(widget.cardUtile[0]),
+                    _buildNavItem(widget.cardUtile[1]),
+                    _buildNavItem(widget.cardUtile[2]),
+                    _buildNavItem(widget.cardUtile[3]),
                   ],
                 )
               ],
@@ -112,8 +104,9 @@ class _CustomCartHeaderState extends State<CustomCartHeader> {
                 Text(
                   card.name,
                   style: TextStyle(
-                    color: isSelected ? AppColors.blue : AppColors.grey,
-                  ),
+                      color: isSelected ? AppColors.blue : AppColors.grey,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal),
                 )
               ],
             ),

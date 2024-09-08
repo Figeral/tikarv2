@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/widgets/side_bar.dart';
 import 'package:tikar/views/desktop/tikar/pages/rent.dart';
 import 'package:tikar/views/desktop/tikar/pages/staff.dart';
@@ -20,6 +21,7 @@ class _AssetPageState extends State<AssetPage> {
     final pages = <Widget>[RealEstate(), Rent(), Tenant(), Lessor(), Staff()];
 
     return Scaffold(
+      // backgroundColor: AppColors.grey.withOpacity(0.3),
       body: Row(
         children: [
           Expanded(
