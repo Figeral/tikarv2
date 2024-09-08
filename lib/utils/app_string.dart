@@ -12,4 +12,15 @@ class AppStrings {
     "Planifiez et suivez tous vos rendez-vous clients en un coup d'œil",
     "Visualisez votre agenda immobilier, programmez et confirmez facilement vos rendez-vous"
   ];
+  static const real_estate = "Immobiliers";
+  static const rent = "Location";
+  static const tenant = "Locataire";
+  static const lessor = "Proprietaire";
+  static const staff = "Employee";
+  static const lessors_state = [
+    "Bailleur Actif",
+    "Bailleur Total",
+    "Au Cameroon",
+    "A l'étranger"
+  ];
 }
