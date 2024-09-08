@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/widgets/side_bar.dart';
 import 'package:tikar/views/desktop/tikar/pages/rent.dart';
 import 'package:tikar/views/desktop/tikar/pages/staff.dart';
 import 'package:tikar/views/desktop/tikar/pages/lessor.dart';
 import 'package:tikar/views/desktop/tikar/pages/tenants.dart';
 import 'package:tikar/views/desktop/tikar/pages/real_estate.dart';
+
 
 class AssetPage extends StatefulWidget {
   const AssetPage({super.key});

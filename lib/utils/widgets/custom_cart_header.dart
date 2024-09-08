@@ -1,9 +1,9 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
-import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
 import 'package:tikar/utils/mediaquery_manager.dart';
+
 
 class CustomCartHeader extends StatefulWidget {
   final List<CardUtile> cardUtile;
