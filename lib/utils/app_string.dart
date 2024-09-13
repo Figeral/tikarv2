@@ -47,4 +47,21 @@ class AppStrings {
     "Residence",
     "Immeuble"
   ];
+  static const auth = <String, dynamic>{
+    "con": "connexion",
+    "email": [
+      "Votre email",
+      [
+        "entrez votre email",
+        "entrez au moin 4 charactères",
+        "Format d'email invalid"
+      ],
+    ],
+    "pw": [
+      'mots de passe',
+      ['entrez un mot de passe', 'at least enter 4 characters'],
+    ],
+    "desc":
+        "Si vous n\'avez pas de compte allez sur SignIn et attendez Validation de votre compte par notre administration ansi que l\'attribution de vos accès"
+  };
 }
