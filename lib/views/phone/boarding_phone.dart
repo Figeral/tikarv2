@@ -10,6 +10,6 @@ class PhoneBoarding extends StatefulWidget {
 class _PhoneBoardingState extends State<PhoneBoarding> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
   }
 }

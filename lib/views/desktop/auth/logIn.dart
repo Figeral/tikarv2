@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
-import 'package:tikar/cubits/base_state.dart';
 import 'package:tikar/cubits/user_cubit.dart';
-import 'package:tikar/models/staff_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/utils/app_navigator.dart';
 import 'package:tikar/utils/widgets/App_loader.dart';
 import 'package:tikar/views/desktop/tikar/main_screen.dart';
@@ -24,9 +21,8 @@ class _LoginState extends State<Login> {
   TextEditingController pwController = TextEditingController();
   @override
   void dispose() {
-    setState(() {
-      isLoding = false;
-    });
+    isLoding = false;
+
     super.dispose();
     usernameController.dispose();
     pwController.dispose();
@@ -101,7 +97,7 @@ class _LoginState extends State<Login> {
             Text(
               AppStrings.auth["desc"],
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
             const SizedBox(
               height: 10.0,

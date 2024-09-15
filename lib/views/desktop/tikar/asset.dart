@@ -18,7 +18,7 @@ class _AssetPageState extends State<AssetPage> {
   int _pageIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final pages = <Widget>[RealEstate(), Rent(), Tenant(), Lessor(), Staff()];
+    final pages = <Widget>[const RealEstate(), const Rent(), const Tenant(), const Lessor(), const Staff()];
 
     return Scaffold(
       // backgroundColor: AppColors.grey.withOpacity(0.3),

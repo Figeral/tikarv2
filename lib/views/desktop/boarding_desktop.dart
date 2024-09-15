@@ -177,13 +177,13 @@ Widget landingPages(String asset, String title, String text,
             children: [
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
                     fontSize: 24),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(

@@ -5,7 +5,7 @@ import 'package:tikar/utils/mediaquery_manager.dart';
 
 class SideBar extends StatefulWidget {
   final void Function(int currentIndex) onSelected;
-  const SideBar({Key? key, required this.onSelected}) : super(key: key);
+  const SideBar({super.key, required this.onSelected});
 
   @override
   _SideBarState createState() => _SideBarState();
@@ -38,7 +38,7 @@ class _SideBarState extends State<SideBar> {
       onEnter: (_) => setState(() => hoveredIndex = index),
       onExit: (_) => setState(() => hoveredIndex = null),
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
+        margin: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(10.0)),
           border:

@@ -8,15 +8,20 @@ class LessorModel extends Equatable {
   final bool isActive;
   final bool inCameroon;
   final StaffModel addebBy;
-  const LessorModel(
-      {this.id,
-      required this.fname,
-      required this.lname,
-      required this.gender,
-      required this.tel,
-      this.isActive = true,
-      required this.inCameroon,
-      required this.addebBy});
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const LessorModel({
+    this.id,
+    required this.fname,
+    required this.lname,
+    required this.gender,
+    required this.tel,
+    this.isActive = true,
+    required this.inCameroon,
+    required this.addebBy,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
   factory LessorModel.fromJson(Map<String, dynamic> json) {
     return LessorModel(
@@ -28,6 +33,8 @@ class LessorModel extends Equatable {
       tel: json['tel'] as int,
       isActive: json['isActive'] as bool? ?? true,
       inCameroon: json['inCameroon'] as bool,
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 
@@ -40,10 +47,16 @@ class LessorModel extends Equatable {
       'tel': tel,
       'isActive': isActive,
       'inCameroon': inCameroon,
-      'addedby': addebBy.toJson()
+      'addedby': addebBy.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
-
+  Map<String, dynamic> toJsonWithoutId() {
+    final json = toJson();
+    json.remove('id');
+    return json;
+  }
   @override
   List<Object?> get props =>
       [id, fname, lname, gender, tel, isActive, inCameroon, addebBy];
@@ -53,13 +66,18 @@ class LessorModel extends Equatable {
           String? gender,
           int? tel,
           bool? isActive,
+          DateTime? createdAt,
+          DateTime? updatedAt,
           bool? inCameroon,
           StaffModel? addedby}) =>
       LessorModel(
-          fname: fname ?? this.fname,
-          lname: lname ?? this.lname,
-          gender: gender ?? this.gender,
-          tel: tel ?? this.tel,
-          inCameroon: inCameroon ?? this.inCameroon,
-          addebBy: addedby ?? addebBy);
+        fname: fname ?? this.fname,
+        lname: lname ?? this.lname,
+        gender: gender ?? this.gender,
+        tel: tel ?? this.tel,
+        inCameroon: inCameroon ?? this.inCameroon,
+        addebBy: addedby ?? addebBy,
+      createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }

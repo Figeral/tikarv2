@@ -1,9 +1,7 @@
 import "dart:convert";
-import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import "package:tikar/models/staff_model.dart";
 import "package:tikar/viewmodels/endpoint.dart";
-import "package:tikar/utils/snackbar_messenger.dart";
 
 class UserVM {
   Future<String> loginUser(
@@ -18,15 +16,15 @@ class UserVM {
     try {
       final response = await http.post(Uri.parse(Endpoint.login()),
           body: jsonEncode(body), headers: headers);
-      print("${response.body}");
+      print(response.body);
       if (response.statusCode == 202) {
-        print("${response.body}");
+        print(response.body);
         return response.body.trim();
       } else {
         throw Exception("account not found");
       }
     } catch (e) {
-      print("${e.toString()}");
+      print(e.toString());
       throw Exception("something when wrong on endpoint");
     }
   }
@@ -46,7 +44,7 @@ class UserVM {
         throw Exception("Error on fetching user data");
       }
     } catch (e) {
-      print("${e.toString()}");
+      print(e.toString());
       throw Exception("something when wrong on fetching user details");
     }
   }

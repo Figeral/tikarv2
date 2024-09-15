@@ -1,94 +1,111 @@
-import 'package:tikar/models/staff_model.dart';
-import 'package:tikar/models/lessor_model.dart';
+import 'package:equatable/equatable.dart';
+import 'package:tikar/models/asset_model.dart';
+import 'package:tikar/models/renter_model.dart';
 
-class AssetModel {
-  int id;
-  LessorModel? lessor;
-  StaffModel addedBy;
-  // List<BasementModel>? basements;
-  int? numberOfFloors, numberOfHalls;
-  int surfaceArea, estimatedValue;
-  int? matricule;
-  String? name, address, ville, description;
-  String assetType;
+class RentModel extends Equatable {
+  final int id;
+  final DateTime? startAt;
+  final DateTime? endAt;
+  final AssetModel? asset;
+  final BasementModel? basement;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final RenterModel renter;
+  final bool active;
+  final int cost;
 
-  bool isActive;
-
-  String? type;
-  AssetModel({
+  const RentModel({
     required this.id,
-    required this.lessor,
-    required this.addedBy,
-    // required this.basements,
-    required this.matricule,
-    required this.surfaceArea,
-    required this.estimatedValue,
-    required this.numberOfFloors,
-    this.numberOfHalls,
-    required this.name,
-    required this.address,
-    required this.ville,
-    required this.description,
-    required this.assetType,
-    required this.type,
-    required this.isActive,
+    this.startAt,
+    this.endAt,
+    this.asset,
+    this.basement,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.renter,
+    required this.active,
+    required this.cost,
   });
-  factory AssetModel.fromJson(Map<String, dynamic> json) {
-    return AssetModel(
+
+  factory RentModel.fromJson(Map<String, dynamic> json) {
+    return RentModel(
       id: json['id'],
-      lessor:
-          json["lessor"] != null ? LessorModel.fromJson(json['lessor']) : null,
-      addedBy: StaffModel.fromJson(json['addedBy']),
-      matricule: json['matricule'],
-      surfaceArea: json['surfaceArea'],
-      estimatedValue: json['estimatedValue'],
-      numberOfFloors: json['numberOfFloors'],
-      numberOfHalls: json['numberOfHalls'],
-      name: json['name'],
-      address: json['address'],
-      ville: json['ville'],
-      description: json['description'],
-      assetType: json['assetType'],
-      type: json['type'],
-      isActive: json['active'],
+      startAt: json['startAt'] != null ? DateTime.parse(json['startAt']) : null,
+      endAt: json['endAt'] != null ? DateTime.parse(json['endAt']) : null,
+      asset: json['asset'] != null ? AssetModel.fromJson(json['asset']) : null,
+      basement: json['basement'] != null
+          ? BasementModel.fromJson(json['basement'])
+          : null,
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+      renter: RenterModel.fromJson(json['renter']),
+      active: json['active'],
+      cost: json['cost'],
     );
   }
-}
 
-class BasementModel {
-  int id;
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'startAt': startAt?.toIso8601String(),
+      'endAt': endAt?.toIso8601String(),
+      'asset': asset?.toJson(),
+      'basement': basement?.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'renter': renter.toJson(),
+      'active': active,
+      'cost': cost,
+    };
+  }
 
-  StaffModel addedBy;
-  AssetModel building;
-  String? description;
-  int surfaceArea;
-  int estimatedValue;
-  String? assetType;
-  int numberOfHalls;
-  String? type;
-  bool active;
-  BasementModel(
-      {required this.id,
-      required this.addedBy,
-      required this.building,
-      required this.description,
-      required this.surfaceArea,
-      required this.estimatedValue,
-      required this.assetType,
-      required this.numberOfHalls,
-      required this.type,
-      required this.active});
-  factory BasementModel.fromJson(Map<String, dynamic> json) {
-    return BasementModel(
-        id: json['id'],
-        addedBy: StaffModel.fromJson(json["addedBy"]),
-        building: AssetModel.fromJson(json['building']),
-        description: json['description'],
-        surfaceArea: json["surfaceArea"],
-        estimatedValue: json["estimatedValue"],
-        assetType: json['assetType'],
-        numberOfHalls: json['numberOfHalls'],
-        type: json['type'],
-        active: json['active']);
+  Map<String, dynamic> toJsonWithoutId() {
+    final json = toJson();
+    json.remove('id');
+    return json;
+  }
+
+  List<Object?> toList() {
+    return [
+      id,
+      startAt,
+      endAt,
+      asset,
+      basement,
+      createdAt,
+      updatedAt,
+      renter,
+      active,
+      cost
+    ];
+  }
+
+  @override
+  List<Object?> get props => toList();
+
+  RentModel copyWith({
+    int? id,
+    DateTime? startAt,
+    DateTime? endAt,
+    AssetModel? asset,
+    BasementModel? basement,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    RenterModel? renter,
+    bool? active,
+    int? cost,
+  }) {
+    return RentModel(
+      id: id ?? this.id,
+      startAt: startAt ?? this.startAt,
+      endAt: endAt ?? this.endAt,
+      asset: asset ?? this.asset,
+      basement: basement ?? this.basement,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      renter: renter ?? this.renter,
+      active: active ?? this.active,
+      cost: cost ?? this.cost,
+    );
   }
 }

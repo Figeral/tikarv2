@@ -82,6 +82,27 @@ class StaffModel extends Equatable {
     };
   }
 
+  Map<String, dynamic> toJsonWithoutId() {
+    return {
+      'fname': fname,
+      'lname': lname,
+      'tel': tel,
+      'active': active,
+      'picture': picture,
+      'role': role,
+      'authorities': authorities,
+      'post': post,
+      'email': email,
+      'username': username,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'accountNonExpired': accountNonExpired,
+      'enabled': enabled,
+      'accountNonLocked': accountNonLocked,
+      'credentialsNonExpired': credentialsNonExpired,
+    };
+  }
+
   List<dynamic> toList() {
     return [
       id,
@@ -114,7 +135,7 @@ class StaffModel extends Equatable {
     bool? active,
     String? picture,
     List<String>? role,
-    List<Map<String,String>>? authorities,
+    List<Map<String, String>>? authorities,
     String? post,
     String? email,
     String? username,

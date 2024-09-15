@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 class PaginatedSortableTable extends StatefulWidget {
   final List<DataItem> data;
 
-  const PaginatedSortableTable({Key? key, required this.data})
-      : super(key: key);
+  const PaginatedSortableTable({super.key, required this.data});
 
   @override
   _PaginatedSortableTableState createState() => _PaginatedSortableTableState();
@@ -77,7 +76,7 @@ class _PaginatedSortableTableState extends State<PaginatedSortableTable> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Search',
               suffixIcon: Icon(Icons.search),
             ),
@@ -100,14 +99,14 @@ class _PaginatedSortableTableState extends State<PaginatedSortableTable> {
                 });
               },
             ),
-            Text('Show Active Only'),
+            const Text('Show Active Only'),
           ],
         ),
         PaginatedDataTable(
-          header: Text('Paginated and Sortable Table'),
+          header: const Text('Paginated and Sortable Table'),
           columns: [
             DataColumn(
-              label: Text('Name'),
+              label: const Text('Name'),
               onSort: (columnIndex, ascending) {
                 setState(() {
                   _sortColumnIndex = columnIndex;
@@ -117,7 +116,7 @@ class _PaginatedSortableTableState extends State<PaginatedSortableTable> {
               },
             ),
             DataColumn(
-              label: Text('Number'),
+              label: const Text('Number'),
               numeric: true,
               onSort: (columnIndex, ascending) {
                 setState(() {
@@ -128,7 +127,7 @@ class _PaginatedSortableTableState extends State<PaginatedSortableTable> {
               },
             ),
             DataColumn(
-              label: Text('Active'),
+              label: const Text('Active'),
               onSort: (columnIndex, ascending) {
                 setState(() {
                   _sortColumnIndex = columnIndex;
@@ -138,7 +137,7 @@ class _PaginatedSortableTableState extends State<PaginatedSortableTable> {
               },
             ),
             DataColumn(
-              label: Text('Date'),
+              label: const Text('Date'),
               onSort: (columnIndex, ascending) {
                 setState(() {
                   _sortColumnIndex = columnIndex;
@@ -160,7 +159,7 @@ class _PaginatedSortableTableState extends State<PaginatedSortableTable> {
               _currentPage = 0;
             });
           },
-          availableRowsPerPage: [5, 10, 15, 20],
+          availableRowsPerPage: const [5, 10, 15, 20],
           sortColumnIndex: _sortColumnIndex,
           sortAscending: _sortAscending,
         ),
@@ -168,7 +167,7 @@ class _PaginatedSortableTableState extends State<PaginatedSortableTable> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: Icon(Icons.chevron_left),
+              icon: const Icon(Icons.chevron_left),
               onPressed: _currentPage > 0
                   ? () {
                       setState(() {
@@ -179,7 +178,7 @@ class _PaginatedSortableTableState extends State<PaginatedSortableTable> {
             ),
             Text('${_currentPage + 1} / $totalPages'),
             IconButton(
-              icon: Icon(Icons.chevron_right),
+              icon: const Icon(Icons.chevron_right),
               onPressed: _currentPage < totalPages - 1
                   ? () {
                       setState(() {
@@ -206,6 +205,7 @@ class _DataSource extends DataTableSource {
   DataRow getRow(int index) {
     final item = _data[index];
     return DataRow(
+      onSelectChanged: (value) => print(item.name),
       color: WidgetStateProperty.resolveWith<Color?>(
         (Set<WidgetState> states) {
           if (index == hoveredIndex) {

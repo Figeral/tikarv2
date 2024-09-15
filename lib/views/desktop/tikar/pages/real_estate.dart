@@ -90,7 +90,7 @@ class _RealEstateState extends State<RealEstate> {
                   otherIcon: "assets/images/building.svg"),
             ],
           ),
-          Container(
+          SizedBox(
             width: context.width * 0.6,
             // height: context.height * 0.32,
             child: PaginatedSortableTable(data: generateTestData()),

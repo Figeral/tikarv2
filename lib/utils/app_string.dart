@@ -62,6 +62,6 @@ class AppStrings {
       ['entrez un mot de passe', 'at least enter 4 characters'],
     ],
     "desc":
-        "Si vous n\'avez pas de compte allez sur SignIn et attendez Validation de votre compte par notre administration ansi que l\'attribution de vos accès"
+        "Si vous n'avez pas de compte allez sur SignIn et attendez Validation de votre compte par notre administration ansi que l'attribution de vos accès"
   };
 }

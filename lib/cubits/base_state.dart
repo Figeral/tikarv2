@@ -1,4 +1,3 @@
-import 'package:tikar/models/staff_model.dart';
 
 abstract class BaseState<T> {
   const BaseState();

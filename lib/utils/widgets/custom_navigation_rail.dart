@@ -7,10 +7,10 @@ class CustomNavigationRail extends StatefulWidget {
   final Function(int) onDestinationSelected;
 
   const CustomNavigationRail({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onDestinationSelected,
-  }) : super(key: key);
+  });
 
   @override
   _CustomNavigationRailState createState() => _CustomNavigationRailState();
@@ -26,11 +26,11 @@ class _CustomNavigationRailState extends State<CustomNavigationRail> {
       color: Colors.white,
       child: Column(
         children: [
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           // Leading widget
           Container(
-              padding: EdgeInsets.all(8), child: Image.asset(AppImage.tikar)),
-          SizedBox(height: 16),
+              padding: const EdgeInsets.all(8), child: Image.asset(AppImage.tikar)),
+          const SizedBox(height: 16),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -65,9 +65,9 @@ class _CustomNavigationRailState extends State<CustomNavigationRail> {
       child: GestureDetector(
         onTap: () => widget.onDestinationSelected(index),
         child: AnimatedContainer(
-          duration: Duration(milliseconds: 00),
-          margin: EdgeInsets.symmetric(vertical: 8),
-          padding: EdgeInsets.all(12),
+          duration: const Duration(milliseconds: 00),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
               color: isHovered && !isSelected
                   ? Colors.grey[200]

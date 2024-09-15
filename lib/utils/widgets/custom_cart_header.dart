@@ -43,7 +43,7 @@ class _CustomCartHeaderState extends State<CustomCartHeader> {
                   height: 120,
                   color: AppColors.black,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Row(
@@ -71,12 +71,12 @@ class _CustomCartHeaderState extends State<CustomCartHeader> {
       child: GestureDetector(
         onTap: () => widget.onSelected(card.value),
         child: AnimatedContainer(
-          constraints: BoxConstraints(minHeight: 100, minWidth: 100),
+          constraints: const BoxConstraints(minHeight: 100, minWidth: 100),
           height: 120,
           width: 150,
-          duration: Duration(milliseconds: 00),
-          margin: EdgeInsets.symmetric(vertical: 8),
-          padding: EdgeInsets.all(12),
+          duration: const Duration(milliseconds: 00),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
               color: isHovered && !isSelected
                   ? Colors.grey[200]
