@@ -22,4 +22,5 @@ class AppLoader {
           ),
         ),
       );
+  static Widget adaptative() => const CircularProgressIndicator.adaptive();
 }

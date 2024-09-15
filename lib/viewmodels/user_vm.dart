@@ -1,7 +1,9 @@
 import "dart:convert";
+import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import "package:tikar/models/staff_model.dart";
 import "package:tikar/viewmodels/endpoint.dart";
+import "package:tikar/utils/snackbar_messenger.dart";
 
 class UserVM {
   Future<String> loginUser(
@@ -38,7 +40,6 @@ class UserVM {
       final response =
           await http.get(Uri.parse(Endpoint.info()), headers: header);
       if (response.statusCode == 200) {
-        print("${response.body}");
         return StaffModel.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
       } else {

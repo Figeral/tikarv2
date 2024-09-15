@@ -19,10 +19,14 @@ class Login extends StatefulWidget {
 final _formKey = GlobalKey<FormState>();
 
 class _LoginState extends State<Login> {
+  bool isLoding = false;
   TextEditingController usernameController = TextEditingController();
   TextEditingController pwController = TextEditingController();
   @override
   void dispose() {
+    setState(() {
+      isLoding = false;
+    });
     super.dispose();
     usernameController.dispose();
     pwController.dispose();
@@ -102,46 +106,56 @@ class _LoginState extends State<Login> {
             const SizedBox(
               height: 10.0,
             ),
-            BlocBuilder<UserCubit, StaffModel?>(
-              builder: (context, state) {
-                return ElevatedButton(
-                  style: ButtonStyle(
-                    fixedSize: WidgetStateProperty.all(const Size(300, 60)),
-                    backgroundColor: WidgetStateProperty.all(AppColors.blue),
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+            ElevatedButton(
+              style: ButtonStyle(
+                fixedSize: WidgetStateProperty.all(const Size(300, 60)),
+                backgroundColor: WidgetStateProperty.all(AppColors.blue),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      //implement login base logic
-                      userCubit.fetchData(usernameController.value.text,
-                          pwController.value.text);
-                      // ... Navigate To your Home Page
-                      if (state != null) {
-                        AppNavigator.push(context,
-                            destination: const MainScreen());
-                        print("pushed to next screen");
-                      }
-                    }
-                  },
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                        color: Theme.of(context)
-                            .scaffoldBackgroundColor
-                            .withOpacity(0.5),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                  ),
-                );
+                ),
+              ),
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  //implemention loading logic
+                  setState(() {
+                    isLoding = true;
+                  });
+
+                  //implement login base logic
+
+                  await userCubit.fetchData(
+                      usernameController.value.text, pwController.value.text);
+
+                  // ... Navigate To your Home Page
+                  if (userCubit.state != null) {
+                    AppNavigator.push(context, destination: const MainScreen());
+                    print("pushed to next page");
+                  }
+                }
               },
-            ),
+              child: isLoding
+                  ? AppLoader.adaptative()
+                  : Text(
+                      'Login',
+                      style: TextStyle(
+                          color: Theme.of(context)
+                              .scaffoldBackgroundColor
+                              .withOpacity(0.5),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
+            )
           ],
         ),
       ),
     );
   }
 }
+
+// class something<T> {
+//   T data(T e) {
+//     if (T is Error) {}
+//   }
+// }
