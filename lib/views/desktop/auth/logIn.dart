@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
+import 'package:tikar/cubits/base_state.dart';
+import 'package:tikar/cubits/user_cubit.dart';
+import 'package:tikar/models/staff_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/utils/app_navigator.dart';
+import 'package:tikar/utils/widgets/App_loader.dart';
 import 'package:tikar/views/desktop/tikar/main_screen.dart';
 
 class Login extends StatefulWidget {
@@ -27,6 +32,7 @@ class _LoginState extends State<Login> {
   bool isPressed = true;
   @override
   Widget build(BuildContext context) {
+    final userCubit = UserCubit();
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -64,11 +70,7 @@ class _LoginState extends State<Login> {
                   suffix: GestureDetector(
                       onTap: () {
                         setState(() {
-                          if (isPressed == true) {
-                            isPressed = false;
-                          } else {
-                            isPressed = true;
-                          }
+                          isPressed = !isPressed;
                         });
                       },
                       child: Icon(
@@ -100,33 +102,42 @@ class _LoginState extends State<Login> {
             const SizedBox(
               height: 10.0,
             ),
-            ElevatedButton(
-              style: ButtonStyle(
-                fixedSize: WidgetStateProperty.all(const Size(300, 60)),
-                backgroundColor: WidgetStateProperty.all(AppColors.blue),
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            BlocBuilder<UserCubit, StaffModel?>(
+              builder: (context, state) {
+                return ElevatedButton(
+                  style: ButtonStyle(
+                    fixedSize: WidgetStateProperty.all(const Size(300, 60)),
+                    backgroundColor: WidgetStateProperty.all(AppColors.blue),
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  //implement login base logic
-
-                  // ... Navigate To your Home Page
-                  AppNavigator.push(context, destination: const MainScreen());
-                }
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      //implement login base logic
+                      userCubit.fetchData(usernameController.value.text,
+                          pwController.value.text);
+                      // ... Navigate To your Home Page
+                      if (state != null) {
+                        AppNavigator.push(context,
+                            destination: const MainScreen());
+                        print("pushed to next screen");
+                      }
+                    }
+                  },
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .scaffoldBackgroundColor
+                            .withOpacity(0.5),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
+                );
               },
-              child: Text(
-                'Login',
-                style: TextStyle(
-                    color: Theme.of(context)
-                        .scaffoldBackgroundColor
-                        .withOpacity(0.5),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15),
-              ),
             ),
           ],
         ),

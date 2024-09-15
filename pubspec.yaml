@@ -44,7 +44,13 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   intl: ^0.19.0
   image_picker: ^1.1.2
-
+  bloc: ^8.1.4
+  equatable: ^2.0.5
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
+  cloudinary: ^1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

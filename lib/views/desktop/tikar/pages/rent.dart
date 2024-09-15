@@ -22,39 +22,43 @@ class _RentState extends State<Rent> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CustomCartHeader(
-              selectedIndex: _selectedIndex,
-              onSelected: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              cardUtile: [
-                CardUtile(
-                  name: AppStrings.rents_state[0],
-                  value: 0,
-                  otherIcon: "assets/images/actual-rents.svg",
-                ),
-                CardUtile(
-                  name: AppStrings.rents_state[1],
-                  value: 1,
-                  otherIcon: "assets/images/total-rents.svg",
-                ),
-                CardUtile(
-                  name: AppStrings.rents_state[2],
-                  value: 2,
-                  otherIcon: "assets/images/appartement.svg",
-                ),
-                CardUtile(
-                  name: AppStrings.rents_state[3],
-                  value: 3,
-                  otherIcon: "assets/images/residence-building.svg",
-                )
-              ],
-            ),
+            cartHeader(),
           ],
         ),
       ),
+    );
+  }
+
+  CustomCartHeader cartHeader() {
+    return CustomCartHeader(
+      selectedIndex: _selectedIndex,
+      onSelected: (index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      cardUtile: [
+        CardUtile(
+          name: AppStrings.rents_state[0],
+          value: 0,
+          otherIcon: "assets/images/actual-rents.svg",
+        ),
+        CardUtile(
+          name: AppStrings.rents_state[1],
+          value: 1,
+          otherIcon: "assets/images/total-rents.svg",
+        ),
+        CardUtile(
+          name: AppStrings.rents_state[2],
+          value: 2,
+          otherIcon: "assets/images/appartement.svg",
+        ),
+        CardUtile(
+          name: AppStrings.rents_state[3],
+          value: 3,
+          otherIcon: "assets/images/residence-building.svg",
+        )
+      ],
     );
   }
 }
