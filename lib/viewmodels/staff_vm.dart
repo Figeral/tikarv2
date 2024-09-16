@@ -87,10 +87,11 @@ class StaffVM extends BaseVM<StaffModel> {
 
   @override
   void postData(StaffModel data) async {
-    final header = await Endpoint.header;
+    final _endpoint = Endpoint.signIn();
+
     try {
-      final response = await http.post(Uri.parse("${endpoint}staff"),
-          body: data.toJsonWithoutId(), headers: header);
+      final response = await http.post(Uri.parse("${_endpoint}"),
+          body: data.toJsonWithoutId());
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {

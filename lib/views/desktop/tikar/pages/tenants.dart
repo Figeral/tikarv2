@@ -3,7 +3,7 @@ import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
 import 'package:tikar/models/renter_model.dart';
 import 'package:tikar/viewmodels/renter_vm.dart';
-import 'package:tikar/utils/mediaquery_manager.dart';
+import 'package:tikar/extensions/extensions.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 
 class Tenant extends StatefulWidget {

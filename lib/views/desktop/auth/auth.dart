@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/app_navigator.dart';
-import 'package:tikar/utils/mediaquery_manager.dart';
+import 'package:tikar/extensions/extensions.dart';
 import 'package:tikar/views/desktop/auth/logIn.dart';
 import 'package:tikar/views/desktop/tikar/main_screen.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
-import 'package:tikar/utils/mediaquery_manager.dart';
+import 'package:tikar/extensions/extensions.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 
 class Rent extends StatefulWidget {

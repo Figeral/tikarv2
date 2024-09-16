@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Endpoint {
   static final localCache = SharedPreferences.getInstance();
   static String login() => "http://localhost:8080/account/login";
+  static String signIn() => "http://localhost:8080/account/signin";
   static String info() => "http://localhost:8080/account/info";
   static String api() => "http://localhost:8080/api/";
 

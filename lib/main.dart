@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tikar/cubits/user_cubit.dart';
+import 'package:tikar/cubits/staff_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/views/phone/home_phone.dart';
 import 'package:tikar/views/desktop/home_desktop.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserCubit>(create: (_) => UserCubit()),
+        BlocProvider<StaffCubit>(create: (_) => StaffCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

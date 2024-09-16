@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
-import 'package:tikar/utils/mediaquery_manager.dart';
+import 'package:tikar/extensions/extensions.dart';
 
 class SideBar extends StatefulWidget {
   final void Function(int currentIndex) onSelected;
