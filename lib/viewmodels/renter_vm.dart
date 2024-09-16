@@ -40,7 +40,6 @@ class RenterVM extends BaseVM<RenterModel> {
 
       if (response.statusCode == 200) {
         final List<dynamic> body = jsonDecode(response.body);
-        print("date is ${body[0]["updatedAt"]}");
         return body
             .map((data) => RenterModel.fromJson(data as Map<String, dynamic>))
             .toList();

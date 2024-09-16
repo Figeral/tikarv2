@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:tikar/cubits/user_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AdminPage extends StatelessWidget {
+class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
 
   @override
+  State<AdminPage> createState() => _AdminPageState();
+}
+
+class _AdminPageState extends State<AdminPage> {
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    final _userCubit = BlocProvider.of<UserCubit>(context);
+
+    return Scaffold(
+      body: Center(
+        child: Text(
+          _userCubit.user?.username ?? "no user in",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+        ),
+      ),
+    );
   }
 }

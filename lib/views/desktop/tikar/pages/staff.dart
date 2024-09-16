@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
+import 'package:tikar/models/staff_model.dart';
+import 'package:tikar/viewmodels/staff_vm.dart';
 import 'package:tikar/utils/mediaquery_manager.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 
@@ -12,6 +14,18 @@ class Staff extends StatefulWidget {
 }
 
 class _StaffState extends State<Staff> {
+  final lessor = StaffVM();
+  late List<StaffModel> lessors;
+  void initialize() async {
+    lessors = await lessor.getData();
+  }
+
+  @override
+  void initState() {
+    initialize();
+    super.initState();
+  }
+
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {

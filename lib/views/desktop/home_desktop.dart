@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tikar/cubits/user_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/views/desktop/auth/auth.dart';
 import 'package:tikar/utils/local_cache_manager.dart';
 import 'package:tikar/views/desktop/boarding_desktop.dart';
@@ -20,6 +22,8 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   @override
   Widget build(BuildContext context) {
+    final _userCubit = BlocProvider.of<UserCubit>(context);
+    _userCubit.userInit();
     return FutureBuilder(
         future: LocalCacheManager.getFlag(name: "onboarding_finished"),
         builder: (context, snapshot) {

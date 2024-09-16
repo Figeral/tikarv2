@@ -35,8 +35,11 @@ class StaffVM extends BaseVM<StaffModel> {
       final response =
           await http.get(Uri.parse("${endpoint}staffs"), headers: header);
       if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
-        return body.map((data) => StaffModel.fromJson(data)).toList();
+        final List<dynamic> body = jsonDecode(response.body);
+        print(body);
+        return body
+            .map((data) => StaffModel.fromJson(data as Map<String, dynamic>))
+            .toList();
       } else {
         throw HttpException("HTTP ${response.statusCode}: ${response.body}",
             uri: Uri.parse("${endpoint}staffs"));

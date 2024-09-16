@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 import 'package:bloc/bloc.dart';
 import 'package:tikar/models/staff_model.dart';
 import 'package:tikar/viewmodels/user_vm.dart';
@@ -20,5 +21,7 @@ class UserCubit extends Cubit<StaffModel?> {
     emit(StaffModel.fromJson(jsonDecode(user!)));
   }
 
-  StaffModel? get user => state;
+  StaffModel? get user {
+    return state;
+  }
 }
