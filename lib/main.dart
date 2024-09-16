@@ -5,6 +5,7 @@ import 'package:tikar/cubits/user_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/views/phone/home_phone.dart';
 import 'package:tikar/views/desktop/home_desktop.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart' as window_size;
 
 Future<void> main(List<String> args) async {

@@ -12,10 +12,19 @@ class StaffVM extends BaseVM<StaffModel> {
   void deleteData(int id) async {
     final header = await Endpoint.header;
     try {
-      final response = await http.delete(Uri.parse("${endpoint}staff/$id"));
+      final response =
+          await http.delete(Uri.parse("${endpoint}staff/$id"), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}staff/$id"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}staff/${id}"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}staff/${id}"));
+      }
     }
   }
 
@@ -29,10 +38,20 @@ class StaffVM extends BaseVM<StaffModel> {
         final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
         return body.map((data) => StaffModel.fromJson(data)).toList();
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}staffs"));
       }
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}staff}"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}staffs"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}staffs"));
+      }
     }
   }
 
@@ -46,10 +65,20 @@ class StaffVM extends BaseVM<StaffModel> {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
         return StaffModel.fromJson(body);
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}staff/{$id}"));
       }
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}staff"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}staff/${id}"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}staff/${id}"));
+      }
     }
   }
 
@@ -60,7 +89,16 @@ class StaffVM extends BaseVM<StaffModel> {
       final response = await http.post(Uri.parse("${endpoint}staff"),
           body: data.toJsonWithoutId(), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}staff"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}staff"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}staff"));
+      }
     }
   }
 
@@ -71,7 +109,16 @@ class StaffVM extends BaseVM<StaffModel> {
       final response = await http.post(Uri.parse("${endpoint}staff"),
           body: data.toJson(), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}staff"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}staff"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}staff"));
+      }
     }
   }
 }

@@ -9,13 +9,8 @@ class BasementVm extends BaseVM<BasementModel> {
   final endpoint = Endpoint.api();
   @override
   void deleteData(int id) async {
-    final header = await Endpoint.header;
-    try {
-      final response = await http.delete(Uri.parse("${endpoint}asset/$id"));
-    } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}asset/$id"));
-    }
+    // TODO: implement getDataById
+    throw UnimplementedError();
   }
 
   @override
@@ -29,11 +24,20 @@ class BasementVm extends BaseVM<BasementModel> {
         final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
         return body.map((data) => BasementModel.fromJson(data)).toList();
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}asset/building/basements"));
       }
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}asset/building/basements}"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}asset/building/basements"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}asset/building/basements"));
+      }
     }
   }
 
@@ -46,8 +50,16 @@ class BasementVm extends BaseVM<BasementModel> {
           body: data.toJsonWithoutId(),
           headers: header);
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}asset/building/basment"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}asset/building/basement"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}asset/building/basement"));
+      }
     }
   }
 
@@ -55,10 +67,21 @@ class BasementVm extends BaseVM<BasementModel> {
   void updateData(BasementModel data) async {
     final header = await Endpoint.header;
     try {
-      final response = await http.post(Uri.parse("${endpoint}renter"),
-          body: data.toJson(), headers: header);
+      final response = await http.post(
+          Uri.parse("${endpoint}asset/building/basement"),
+          body: data.toJson(),
+          headers: header);
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}renter"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}asset/building/basement"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}asset/building/basement"));
+      }
     }
   }
 

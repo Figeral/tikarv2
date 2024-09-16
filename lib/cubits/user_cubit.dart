@@ -9,9 +9,9 @@ class UserCubit extends Cubit<StaffModel?> {
   final _userVM = UserVM();
   Future<void> fetchData(String username, String pw) async {
     final token = await _userVM.loginUser(username: username, pw: pw);
-    LocalCacheManager.setToken(key: "user_token", value: token);
+    await LocalCacheManager.setToken(key: "user_token", value: token);
     final user = await _userVM.fetchUserInfo(token: token);
-    LocalCacheManager.setUser(key: "user_detail", value: user);
+    await LocalCacheManager.setUser(key: "user_detail", value: user);
     emit(user);
   }
 

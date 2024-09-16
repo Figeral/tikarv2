@@ -12,27 +12,53 @@ class RenterVM extends BaseVM<RenterModel> {
   void deleteData(int id) async {
     final header = await Endpoint.header;
     try {
-      final response = await http.delete(Uri.parse("${endpoint}renter/$id"));
+      final response = await http.delete(Uri.parse("${endpoint}renter/$id"),
+          headers: header);
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}renter/$id"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}renter/${id}"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}renter/${id}"));
+      }
     }
   }
 
   @override
   Future<List<RenterModel>> getData() async {
     final header = await Endpoint.header;
+
     try {
       final response =
           await http.get(Uri.parse("${endpoint}renters"), headers: header);
+      print("Response status code: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
       if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
-        return body.map((data) => RenterModel.fromJson(data)).toList();
+        final List<dynamic> body = jsonDecode(response.body);
+        print("date is ${body[0]["updatedAt"]}");
+        return body
+            .map((data) => RenterModel.fromJson(data as Map<String, dynamic>))
+            .toList();
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}renters"));
       }
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}renter}"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}renters"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}renters"));
+      }
     }
   }
 
@@ -46,10 +72,20 @@ class RenterVM extends BaseVM<RenterModel> {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
         return RenterModel.fromJson(body);
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}renter/{$id}"));
       }
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}renter"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}renter/${id}"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}renter/${id}"));
+      }
     }
   }
 
@@ -60,7 +96,16 @@ class RenterVM extends BaseVM<RenterModel> {
       final response = await http.post(Uri.parse("${endpoint}renter"),
           body: data.toJsonWithoutId(), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}renter"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}renter"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}renter"));
+      }
     }
   }
 
@@ -71,7 +116,16 @@ class RenterVM extends BaseVM<RenterModel> {
       final response = await http.post(Uri.parse("${endpoint}renter"),
           body: data.toJson(), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}renter"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}renter"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}renter"));
+      }
     }
   }
 }

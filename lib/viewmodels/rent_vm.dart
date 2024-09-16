@@ -11,10 +11,19 @@ class RentVM extends BaseVM<RentModel> {
   void deleteData(int id) async {
     final header = await Endpoint.header;
     try {
-      final response = await http.delete(Uri.parse("${endpoint}rent/$id"));
+      final response =
+          await http.delete(Uri.parse("${endpoint}rent/$id"), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}renter/$id"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}rent/${id}"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}rent/${id}"));
+      }
     }
   }
 
@@ -26,12 +35,23 @@ class RentVM extends BaseVM<RentModel> {
           await http.get(Uri.parse("${endpoint}rents"), headers: header);
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
+
         return body.map((data) => RentModel.fromJson(data)).toList();
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}rents"));
       }
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}rent}"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}rents"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}rents"));
+      }
     }
   }
 
@@ -45,10 +65,20 @@ class RentVM extends BaseVM<RentModel> {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
         return RentModel.fromJson(body);
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}rent/{$id}"));
       }
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}rent"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}rent/${id}"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}rent/${id}"));
+      }
     }
   }
 
@@ -59,7 +89,16 @@ class RentVM extends BaseVM<RentModel> {
       final response = await http.post(Uri.parse("${endpoint}rent"),
           body: data.toJsonWithoutId(), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}rent"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}rent"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}rent"));
+      }
     }
   }
 
@@ -70,7 +109,16 @@ class RentVM extends BaseVM<RentModel> {
       final response = await http.post(Uri.parse("${endpoint}rent"),
           body: data.toJson(), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}rent"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}rent"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}rent"));
+      }
     }
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
+import 'package:tikar/models/lessor_model.dart';
+import 'package:tikar/viewmodels/lessor_vm.dart';
 import 'package:tikar/utils/mediaquery_manager.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 
@@ -12,6 +14,18 @@ class Lessor extends StatefulWidget {
 }
 
 class _LessorState extends State<Lessor> {
+  final lessor = LessorVM();
+  late List<LessorModel> lessors;
+  void initialize() async {
+    lessors = await lessor.getData();
+  }
+
+  @override
+  void initState() {
+    initialize();
+    super.initState();
+  }
+
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {

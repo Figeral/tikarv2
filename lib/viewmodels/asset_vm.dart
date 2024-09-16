@@ -11,10 +11,22 @@ class AssetVM extends BaseVM<AssetModel> {
   void deleteData(int id) async {
     final header = await Endpoint.header;
     try {
-      final response = await http.delete(Uri.parse("${endpoint}asset/$id"));
+      final response = await http.delete(
+          Uri.parse(
+            "${endpoint}asset/$id",
+          ),
+          headers: header);
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}asset/$id"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}asset/$id"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}asset/$id"));
+      }
     }
   }
 
@@ -28,11 +40,20 @@ class AssetVM extends BaseVM<AssetModel> {
         final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
         return body.map((data) => AssetModel.fromJson(data)).toList();
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}assets/parent"));
       }
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}assets/parent}"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}assets/parent"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}assets/parent"));
+      }
     }
   }
 
@@ -45,11 +66,20 @@ class AssetVM extends BaseVM<AssetModel> {
         final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
         return body.map((data) => AssetModel.fromJson(data)).toList();
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}assets/buildings"));
       }
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}assets/buildings}"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}assets/buildings"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}assets/buildings"));
+      }
     }
   }
 
@@ -62,11 +92,20 @@ class AssetVM extends BaseVM<AssetModel> {
         final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
         return body.map((data) => AssetModel.fromJson(data)).toList();
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}assets/residences"));
       }
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}assets/residences}"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}assets/residences"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}assets/residences"));
+      }
     }
   }
 
@@ -80,11 +119,20 @@ class AssetVM extends BaseVM<AssetModel> {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
         return AssetModel.fromJson(body);
       } else {
-        throw Exception("error occurred ${jsonDecode(response.body)}");
+        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+            uri: Uri.parse("${endpoint}asset/{$id}"));
       }
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}asset/$id"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}asset/${id}"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}asset/${id}"));
+      }
     }
   }
 
@@ -100,8 +148,16 @@ class AssetVM extends BaseVM<AssetModel> {
       final response = await http.post(Uri.parse("${endpoint}asset/building"),
           body: data.toJsonWithoutId(), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}asset/building"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}asset/building"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}asset/building"));
+      }
     }
   }
 
@@ -111,19 +167,22 @@ class AssetVM extends BaseVM<AssetModel> {
       final response = await http.post(Uri.parse("${endpoint}asset/residence"),
           body: data.toJsonWithoutId(), headers: header);
     } catch (e) {
-      throw HttpException(e.toString(),
-          uri: Uri.parse("${endpoint}asset/residence"));
+      print("Exception caught: $e");
+      if (e is FormatException) {
+        throw HttpException("Invalid JSON response",
+            uri: Uri.parse("${endpoint}asset/residence"));
+      } else if (e is HttpException) {
+        rethrow;
+      } else {
+        throw HttpException("Network error: ${e.toString()}",
+            uri: Uri.parse("${endpoint}asset/residence"));
+      }
     }
   }
 
   @override
   void updateData(AssetModel data) async {
-    final header = await Endpoint.header;
-    try {
-      final response = await http.post(Uri.parse("${endpoint}renter"),
-          body: data.toJson(), headers: header);
-    } catch (e) {
-      throw HttpException(e.toString(), uri: Uri.parse("${endpoint}renter"));
-    }
+    // TODO: implement getDataById
+    throw UnimplementedError();
   }
 }

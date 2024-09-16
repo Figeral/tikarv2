@@ -34,6 +34,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final userCubit = UserCubit();
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: Form(
         key: _formKey,
         child: Column(
