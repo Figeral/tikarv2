@@ -18,12 +18,12 @@ class StaffVM extends BaseVM<StaffModel> {
       print("Exception caught: $e");
       if (e is FormatException) {
         throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}staff/${id}"));
+            uri: Uri.parse("${endpoint}staff/$id"));
       } else if (e is HttpException) {
         rethrow;
       } else {
         throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}staff/${id}"));
+            uri: Uri.parse("${endpoint}staff/$id"));
       }
     }
   }
@@ -75,22 +75,22 @@ class StaffVM extends BaseVM<StaffModel> {
       print("Exception caught: $e");
       if (e is FormatException) {
         throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}staff/${id}"));
+            uri: Uri.parse("${endpoint}staff/$id"));
       } else if (e is HttpException) {
         rethrow;
       } else {
         throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}staff/${id}"));
+            uri: Uri.parse("${endpoint}staff/$id"));
       }
     }
   }
 
   @override
   void postData(StaffModel data) async {
-    final _endpoint = Endpoint.signIn();
+    final endpoint = Endpoint.signIn();
 
     try {
-      final response = await http.post(Uri.parse("${_endpoint}"),
+      final response = await http.post(Uri.parse(endpoint),
           body: data.toJsonWithoutId());
     } catch (e) {
       print("Exception caught: $e");

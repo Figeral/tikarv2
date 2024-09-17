@@ -12,13 +12,13 @@ class AdminPage extends StatefulWidget {
 class _AdminPageState extends State<AdminPage> {
   @override
   Widget build(BuildContext context) {
-    final _userCubit = BlocProvider.of<UserCubit>(context);
+    final userCubit = BlocProvider.of<UserCubit>(context);
 
     return Scaffold(
       body: Center(
         child: Text(
-          _userCubit.user?.username ?? "no user in",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          userCubit.user?.username ?? "no user in",
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
         ),
       ),
     );

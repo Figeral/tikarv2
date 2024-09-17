@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:tikar/models/staff_model.dart';
 
 class RenterModel extends Equatable {
   final int id;

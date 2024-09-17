@@ -5,7 +5,7 @@ import 'package:tikar/viewmodels/staff_vm.dart';
 import 'package:tikar/data/local_data_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class StaffCubit extends Cubit<List<StaffModel>?>
+class StaffCubit extends Cubit<List<StaffModel?>?>
     implements BaseCubit<StaffModel> {
   StaffCubit() : super(null) {
     _init();
@@ -24,17 +24,20 @@ class StaffCubit extends Cubit<List<StaffModel>?>
 
   @override
   void delete(int id) async {
-    // TODO: implement delete
+    _staffVM.deleteData(id);
+    await cache.clear();
+    fetch();
   }
 
   @override
   void fetch() async {
     final data = await _staffVM.getData();
     data.forEach((e) async {
-      print(" staff json : ${e.toJson()}");
       await cache.save(e);
     });
-    emit(data);
+    cache.getData().listen((e) {
+      emit(e);
+    });
   }
 
   @override
@@ -44,11 +47,19 @@ class StaffCubit extends Cubit<List<StaffModel>?>
 
   @override
   void post(StaffModel data) {
-    // TODO: implement post
+    _staffVM.postData(data);
   }
 
   @override
   void update(StaffModel data) {
-    // TODO: implement update
+    _staffVM.updateData(data);
   }
+
+  void getData() {
+    cache.getData().listen((e) {
+      emit(e);
+    });
+  }
+
+  List<StaffModel?>? get staff => state;
 }

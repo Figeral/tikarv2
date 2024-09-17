@@ -17,12 +17,12 @@ class RentVM extends BaseVM<RentModel> {
       print("Exception caught: $e");
       if (e is FormatException) {
         throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}rent/${id}"));
+            uri: Uri.parse("${endpoint}rent/$id"));
       } else if (e is HttpException) {
         rethrow;
       } else {
         throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}rent/${id}"));
+            uri: Uri.parse("${endpoint}rent/$id"));
       }
     }
   }
@@ -72,12 +72,12 @@ class RentVM extends BaseVM<RentModel> {
       print("Exception caught: $e");
       if (e is FormatException) {
         throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}rent/${id}"));
+            uri: Uri.parse("${endpoint}rent/$id"));
       } else if (e is HttpException) {
         rethrow;
       } else {
         throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}rent/${id}"));
+            uri: Uri.parse("${endpoint}rent/$id"));
       }
     }
   }

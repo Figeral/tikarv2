@@ -126,12 +126,12 @@ class AssetVM extends BaseVM<AssetModel> {
       print("Exception caught: $e");
       if (e is FormatException) {
         throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}asset/${id}"));
+            uri: Uri.parse("${endpoint}asset/$id"));
       } else if (e is HttpException) {
         rethrow;
       } else {
         throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}asset/${id}"));
+            uri: Uri.parse("${endpoint}asset/$id"));
       }
     }
   }

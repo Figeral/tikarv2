@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:tikar/extensions/extensions.dart';
 
 class PaginatedSortableTable extends StatefulWidget {
   final List<DataItem> data;
