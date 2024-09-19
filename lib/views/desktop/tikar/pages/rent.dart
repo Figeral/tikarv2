@@ -78,6 +78,12 @@ class _RentState extends State<Rent> with SingleTickerProviderStateMixin {
 
   CustomCartHeader cartHeader() {
     return CustomCartHeader(
+      data: [
+        1,
+        2,
+        3,
+        4,
+      ],
       selectedIndex: _selectedIndex,
       onSelected: (index) {
         setState(() {

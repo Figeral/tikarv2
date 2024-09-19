@@ -12,8 +12,7 @@ class RenterVM extends BaseVM<RenterModel> {
   void deleteData(int id) async {
     final header = await Endpoint.header;
     try {
-      final response = await http.delete(Uri.parse("${endpoint}renter/$id"),
-          headers: header);
+      await http.delete(Uri.parse("${endpoint}renter/$id"), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {
@@ -93,7 +92,7 @@ class RenterVM extends BaseVM<RenterModel> {
     final header = await Endpoint.header;
     try {
       final response = await http.post(Uri.parse("${endpoint}renter"),
-          body: data.toJsonWithoutId(), headers: header);
+          body: jsonEncode(data.toJsonWithoutId()), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {
@@ -113,7 +112,7 @@ class RenterVM extends BaseVM<RenterModel> {
     final header = await Endpoint.header;
     try {
       final response = await http.post(Uri.parse("${endpoint}renter"),
-          body: data.toJson(), headers: header);
+          body: jsonEncode(data.toJsonWithoutId()), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {

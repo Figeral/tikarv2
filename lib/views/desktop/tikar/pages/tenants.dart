@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
+import 'package:tikar/cubits/renter_cubit.dart';
 import 'package:tikar/models/renter_model.dart';
+import 'package:tikar/utils/form/staff_form.dart';
 import 'package:tikar/extensions/extensions.dart';
+import 'package:tikar/utils/form/renter_form.dart';
+import 'package:tikar/utils/tables/renter_table.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 
 class Tenant extends StatefulWidget {
@@ -17,7 +21,7 @@ class Tenant extends StatefulWidget {
 class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
   bool _isVisible = false;
   late AnimationController _controller;
-  late List<RenterModel> renters;
+  // late List<RenterModel> renters;
 
   @override
   void initState() {
@@ -43,63 +47,99 @@ class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final _cubit = context.cubit<RenterCubit>();
+    _cubit.fetch();
     return Scaffold(
       floatingActionButton: defaultAnimatedFAB(),
       body: SizedBox(
         width: context.width,
         height: context.height,
         child: SingleChildScrollView(
-          child: Center(
-            child: Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CustomCartHeader(
-                      selectedIndex: _selectedIndex,
-                      onSelected: (index) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                      },
-                      cardUtile: [
-                        CardUtile(
-                            name: AppStrings.tenants_state[0],
-                            value: 0,
-                            otherIcon: "assets/images/tenant.svg"),
-                        CardUtile(
-                            name: AppStrings.tenants_state[1],
-                            value: 1,
-                            otherIcon: "assets/images/total-tenant.svg"),
-                        CardUtile(
-                          name: AppStrings.tenants_state[2],
-                          value: 2,
-                          otherIcon: "assets/images/person.svg",
-                        ),
-                        CardUtile(
-                            name: AppStrings.tenants_state[3],
-                            value: 3,
-                            otherIcon: "assets/images/enterprise.svg")
-                      ],
-                    ),
-                  ],
-                ),
-                Visibility(
-                  visible: _isVisible,
-                  child: GestureDetector(
-                    onTap: toggle,
-                    child: Container(
-                      width: context.width,
-                      height: context.height + context.height / 2,
-                      color: const Color.fromARGB(100, 12, 12, 12),
-                    ),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Center(
+                    child: FutureBuilder(
+                        future: _cubit.getData(),
+                        builder: (_, snapshot) {
+                          if (_cubit.state != null) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                cardHeader(_cubit.state!),
+                                Container(
+                                    width: context.width * 0.6,
+                                    height: context.width * 0.6,
+                                    child: RenterPaginatedSortableTable(
+                                        data: _cubit.renter!))
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }),
+                  )
+                ],
+              ),
+              Visibility(
+                visible: _isVisible,
+                child: GestureDetector(
+                  onTap: toggle,
+                  child: Container(
+                    width: context.width,
+                    height: context.height + context.height / 2,
+                    color: const Color.fromARGB(100, 12, 12, 12),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  CustomCartHeader cardHeader(List<RenterModel?> data) {
+    return CustomCartHeader(
+      data: [
+        data.where((e) => e!.isActive == true).toList().length,
+        data.length,
+        data
+            .where((e) => e!.gender.contains("Personne") == true)
+            .toList()
+            .length,
+        data
+            .where((e) => e!.gender.contains("Entreprise") == true)
+            .toList()
+            .length,
+      ],
+      selectedIndex: _selectedIndex,
+      onSelected: (index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      cardUtile: [
+        CardUtile(
+            name: AppStrings.tenants_state[0],
+            value: 0,
+            otherIcon: "assets/images/tenant.svg"),
+        CardUtile(
+            name: AppStrings.tenants_state[1],
+            value: 1,
+            otherIcon: "assets/images/total-tenant.svg"),
+        CardUtile(
+          name: AppStrings.tenants_state[2],
+          value: 2,
+          otherIcon: "assets/images/person.svg",
+        ),
+        CardUtile(
+            name: AppStrings.tenants_state[3],
+            value: 3,
+            otherIcon: "assets/images/enterprise.svg")
+      ],
     );
   }
 
@@ -132,7 +172,10 @@ class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
                     child: Transform.translate(
                         offset: Offset(
                             dx * -_controller.value, dy * -_controller.value),
-                        child: child),
+                        child: RenterForm(
+                          height: 400 * _controller.value,
+                          width: 680 * _controller.value,
+                        )),
                   )
                 : Opacity(
                     opacity: 0,

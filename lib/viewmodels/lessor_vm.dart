@@ -34,7 +34,7 @@ class LessorVM extends BaseVM<LessorModel> {
       final response =
           await http.get(Uri.parse("${endpoint}lessors"), headers: header);
       if (response.statusCode == 200) {
-        final body = jsonDecode(response.body);
+        final List<dynamic> body = jsonDecode(response.body);
 
         return body
             .map((data) => LessorModel.fromJson(data as Map<String, dynamic>))
@@ -90,8 +90,9 @@ class LessorVM extends BaseVM<LessorModel> {
   void postData(LessorModel data) async {
     final header = await Endpoint.header;
     try {
+      print(data.toJson());
       final response = await http.post(Uri.parse("${endpoint}lessor"),
-          body: data.toJsonWithoutId(), headers: header);
+          body: jsonEncode(data.toJsonWithoutId()), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {
@@ -111,7 +112,7 @@ class LessorVM extends BaseVM<LessorModel> {
     final header = await Endpoint.header;
     try {
       final response = await http.post(Uri.parse("${endpoint}lessor"),
-          body: data.toJson(), headers: header);
+          body: jsonEncode(data.toJson()), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {

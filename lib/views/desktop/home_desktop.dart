@@ -22,8 +22,8 @@ class _DesktopHomeState extends State<DesktopHome> {
 
   @override
   Widget build(BuildContext context) {
-    final userCubit = BlocProvider.of<UserCubit>(context);
-    userCubit.userInit();
+    // final userCubit = BlocProvider.of<UserCubit>(context);
+    // userCubit.userInit();
     return FutureBuilder(
         future: LocalCacheManager.getFlag(name: "onboarding_finished"),
         builder: (context, snapshot) {

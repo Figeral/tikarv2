@@ -1,40 +1,42 @@
 import 'package:equatable/equatable.dart';
 
 class StaffModel extends Equatable {
-  final int id;
+  final int? id;
   final String fname, lname;
   final int tel;
   final bool active;
   final String? picture;
   final List<String> role;
-  final List<Map<String, String>> authorities;
+  final List<Map<String, String>>? authorities;
   final String? post;
   final String email;
+  final String pw;
   final String username;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool accountNonExpired;
-  final bool enabled;
-  final bool accountNonLocked;
-  final bool credentialsNonExpired;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final bool? accountNonExpired;
+  final bool? enabled;
+  final bool? accountNonLocked;
+  final bool? credentialsNonExpired;
   const StaffModel({
-    required this.id,
+    this.id,
     required this.fname,
     required this.lname,
     required this.tel,
     required this.active,
     this.picture,
+    required this.pw,
     required this.role,
-    required this.authorities,
-    this.post,
+    this.authorities,
+    required this.post,
     required this.email,
     required this.username,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.accountNonExpired,
-    required this.enabled,
-    required this.accountNonLocked,
-    required this.credentialsNonExpired,
+    this.createdAt,
+    this.updatedAt,
+    this.accountNonExpired,
+    this.enabled,
+    this.accountNonLocked,
+    this.credentialsNonExpired,
   });
 
   factory StaffModel.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class StaffModel extends Equatable {
       enabled: json['enabled'],
       accountNonLocked: json['accountNonLocked'],
       credentialsNonExpired: json['credentialsNonExpired'],
+      pw: json["password"],
     );
   }
   Map<String, dynamic> toJson() {
@@ -73,12 +76,13 @@ class StaffModel extends Equatable {
       'post': post,
       'email': email,
       'username': username,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       'accountNonExpired': accountNonExpired,
       'enabled': enabled,
       'accountNonLocked': accountNonLocked,
       'credentialsNonExpired': credentialsNonExpired,
+      "password": pw,
     };
   }
 
@@ -90,16 +94,17 @@ class StaffModel extends Equatable {
       'active': active,
       'picture': picture,
       'role': role,
-      'authorities': authorities,
+      "password": pw,
+      // 'authorities': authorities,
       'post': post,
       'email': email,
       'username': username,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      'accountNonExpired': accountNonExpired,
-      'enabled': enabled,
-      'accountNonLocked': accountNonLocked,
-      'credentialsNonExpired': credentialsNonExpired,
+      // 'createdAt': createdAt?.toIso8601String(),
+      // 'updatedAt': updatedAt?.toIso8601String(),
+      // 'accountNonExpired': accountNonExpired,
+      // 'enabled': enabled,
+      // 'accountNonLocked': accountNonLocked,
+      // 'credentialsNonExpired': credentialsNonExpired,
     };
   }
 
@@ -113,6 +118,7 @@ class StaffModel extends Equatable {
       picture,
       role,
       authorities,
+      pw,
       post,
       email,
       username,
@@ -134,6 +140,7 @@ class StaffModel extends Equatable {
     int? tel,
     bool? active,
     String? picture,
+    String? pw,
     List<String>? role,
     List<Map<String, String>>? authorities,
     String? post,
@@ -152,9 +159,10 @@ class StaffModel extends Equatable {
       lname: lname ?? this.lname,
       tel: tel ?? this.tel,
       active: active ?? this.active,
+      pw: pw ?? this.pw,
       picture: picture ?? this.picture,
       role: role ?? List.from(this.role),
-      authorities: authorities ?? List.from(this.authorities),
+      authorities: authorities ?? List.from(this.authorities!),
       post: post ?? this.post,
       email: email ?? this.email,
       username: username ?? this.username,

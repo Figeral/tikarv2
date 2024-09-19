@@ -7,35 +7,31 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class StaffCubit extends Cubit<List<StaffModel?>?>
     implements BaseCubit<StaffModel> {
-  StaffCubit() : super(null) {
-    _init();
-  }
-  void _init() async {
-    final sharedPreferences = await SharedPreferences.getInstance();
-    cache = LocalDataStorage<StaffModel>(
-        preferences: sharedPreferences,
-        key: "staff_key",
-        fromJson: StaffModel.fromJson);
-    print('INI5');
-  }
+  StaffCubit() : super(null) {}
 
   final _staffVM = StaffVM();
-  late LocalDataStorage<StaffModel> cache;
+  Future<LocalDataStorage<StaffModel>> get cache async =>
+      LocalDataStorage<StaffModel>(
+          preferences: await SharedPreferences.getInstance(),
+          key: "staff_key",
+          fromJson: StaffModel.fromJson);
 
   @override
   void delete(int id) async {
     _staffVM.deleteData(id);
-    await cache.clear();
+    final _cache = await cache;
+    await _cache.clear();
     fetch();
   }
 
   @override
   void fetch() async {
     final data = await _staffVM.getData();
+    final _cache = await cache;
     data.forEach((e) async {
-      await cache.save(e);
+      await _cache.save(e);
     });
-    cache.getData().listen((e) {
+    _cache.getData().listen((e) {
       emit(e);
     });
   }
@@ -46,17 +42,18 @@ class StaffCubit extends Cubit<List<StaffModel?>?>
   }
 
   @override
-  void post(StaffModel data) {
+  void post(StaffModel data) async {
     _staffVM.postData(data);
   }
 
   @override
-  void update(StaffModel data) {
+  void update(StaffModel data) async {
     _staffVM.updateData(data);
   }
 
-  void getData() {
-    cache.getData().listen((e) {
+  Future<void> getData() async {
+    final _cache = await cache;
+    _cache.getData().listen((e) {
       emit(e);
     });
   }

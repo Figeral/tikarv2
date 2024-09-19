@@ -24,9 +24,9 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<UserCubit>(context);
+    // final cubit = BlocProvider.of<UserCubit>(context);
     return Builder(builder: (context) {
-      cubit.userInit();
+      // cubit.userInit();
       // print(cubit.user?.toJson().toString());
       return Scaffold(
         body: Row(

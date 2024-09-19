@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
@@ -6,12 +7,14 @@ import 'package:tikar/extensions/extensions.dart';
 
 class CustomCartHeader extends StatefulWidget {
   final List<CardUtile> cardUtile;
+  final List<int> data;
   final int selectedIndex;
   final Function(int index) onSelected;
 
   const CustomCartHeader({
     super.key,
     required this.cardUtile,
+    required this.data,
     required this.selectedIndex,
     required this.onSelected,
   });
@@ -32,29 +35,52 @@ class _CustomCartHeaderState extends State<CustomCartHeader> {
           constraints: const BoxConstraints(maxHeight: 320),
           child: Card(
             color: AppColors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 30, top: 20),
-                  width: 250,
-                  height: 120,
-                  color: AppColors.black,
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildNavItem(widget.cardUtile[0]),
-                    _buildNavItem(widget.cardUtile[1]),
-                    _buildNavItem(widget.cardUtile[2]),
-                    _buildNavItem(widget.cardUtile[3]),
-                  ],
-                )
-              ],
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 30, top: 20),
+                    width: 350,
+                    height: 120,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: context.width * 0.05,
+                        ),
+                        Text(
+                          "${widget.data[widget.selectedIndex]}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40,
+                              color: AppColors.blue),
+                        ),
+                        SizedBox(
+                          width: 150,
+                          child: Text(
+                            "effectifs",
+                            style: TextStyle(color: AppColors.grey),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildNavItem(widget.cardUtile[0]),
+                      _buildNavItem(widget.cardUtile[1]),
+                      _buildNavItem(widget.cardUtile[2]),
+                      _buildNavItem(widget.cardUtile[3]),
+                    ],
+                  )
+                ],
+              ),
             ),
           )),
     );

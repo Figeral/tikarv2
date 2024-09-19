@@ -94,42 +94,50 @@ class _RealEstateState extends State<RealEstate>
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  CustomCartHeader(
-                    selectedIndex: _selectedIndex,
-                    onSelected: (index) {
-                      setState(() {
-                        _selectedIndex = index;
-                      });
-                    },
-                    cardUtile: [
-                      CardUtile(
-                          name: AppStrings.assets_state[0],
-                          value: 0,
-                          otherIcon: "assets/images/actif-asset.svg"),
-                      CardUtile(
-                          name: AppStrings.assets_state[1],
-                          value: 1,
-                          otherIcon: "assets/images/total-asset.svg"),
-                      CardUtile(
-                        name: AppStrings.assets_state[2],
-                        value: 2,
-                        otherIcon: "assets/images/residence.svg",
-                      ),
-                      CardUtile(
-                          name: AppStrings.assets_state[3],
-                          value: 3,
-                          otherIcon: "assets/images/building.svg"),
-                    ],
-                  ),
-                  SizedBox(
-                    width: context.width * 0.6,
-                    // height: context.height * 0.32,
-                    child: PaginatedSortableTable(data: generateTestData()),
-                  ),
-                ],
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    CustomCartHeader(
+                      data: [
+                        1,
+                        2,
+                        3,
+                        4,
+                      ],
+                      selectedIndex: _selectedIndex,
+                      onSelected: (index) {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
+                      cardUtile: [
+                        CardUtile(
+                            name: AppStrings.assets_state[0],
+                            value: 0,
+                            otherIcon: "assets/images/actif-asset.svg"),
+                        CardUtile(
+                            name: AppStrings.assets_state[1],
+                            value: 1,
+                            otherIcon: "assets/images/total-asset.svg"),
+                        CardUtile(
+                          name: AppStrings.assets_state[2],
+                          value: 2,
+                          otherIcon: "assets/images/residence.svg",
+                        ),
+                        CardUtile(
+                            name: AppStrings.assets_state[3],
+                            value: 3,
+                            otherIcon: "assets/images/building.svg"),
+                      ],
+                    ),
+                    SizedBox(
+                      width: context.width * 0.6,
+                      // height: context.height * 0.32,
+                      child: PaginatedSortableTable(data: generateTestData()),
+                    ),
+                  ],
+                ),
               ),
               Visibility(
                 visible: _isVisible,

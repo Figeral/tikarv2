@@ -15,7 +15,7 @@ class UserCubit extends Cubit<StaffModel?> {
     emit(user);
   }
 
-  void userInit() async {
+  Future<void> userInit() async {
     final user = await LocalCacheManager.getUser(key: "user_detail");
     emit(StaffModel.fromJson(jsonDecode(user!)));
   }

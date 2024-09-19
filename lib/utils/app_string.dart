@@ -64,4 +64,7 @@ class AppStrings {
     "desc":
         "Si vous n'avez pas de compte allez sur SignIn et attendez Validation de votre compte par notre administration ansi que l'attribution de vos accès"
   };
+  static const lessor_post_header = "Créé un Bailleur";
+  static const staff_post_header = "Créé un Employéé";
+
 }

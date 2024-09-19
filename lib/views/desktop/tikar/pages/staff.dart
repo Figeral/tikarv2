@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
+import 'package:tikar/models/staff_model.dart';
 import 'package:tikar/cubits/staff_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/utils/form/staff_form.dart';
 import 'package:tikar/extensions/extensions.dart';
+import 'package:tikar/utils/tables/staff_table.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
+import 'package:tikar/utils/widgets/paginated_data_table.dart';
 
 class Staff extends StatefulWidget {
   const Staff({super.key});
@@ -45,8 +48,34 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final sHeight = MediaQuery.of(context).size.height;
     final sWidth = MediaQuery.of(context).size.width;
-
+    final _cubit = BlocProvider.of<StaffCubit>(context);
+    _cubit.fetch();
     return Scaffold(
+      appBar: AppBar(
+        title: const Row(
+          children: [
+            Text(
+              'Actifs',
+              style: TextStyle(color: AppColors.grey),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 3, right: 3),
+              child: Text('/'),
+            ),
+            Text('Staff'),
+          ],
+        ),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
       floatingActionButton: defaultAnimatedFAB(),
       body: SizedBox(
         width: context.width,
@@ -55,13 +84,27 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
           child: Stack(
             children: [
               Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CartHeader(),
-                  ],
-                ),
-              ),
+                  child: FutureBuilder(
+                      future: _cubit.getData(),
+                      builder: (_, snapshot) {
+                        if (_cubit.state != null) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              CartHeader(_cubit.state!),
+                              SizedBox(
+                                height: 60,
+                              ),
+                              Container(
+                                  width: context.width * 0.6,
+                                  height: context.width * 0.6,
+                                  child: StaffPaginatedSortableTable(
+                                      data: _cubit.staff!)),
+                            ],
+                          );
+                        }
+                        return Container();
+                      })),
               Visibility(
                 visible: _isVisible,
                 child: GestureDetector(
@@ -80,8 +123,14 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
     );
   }
 
-  CustomCartHeader CartHeader() {
+  CustomCartHeader CartHeader(List<StaffModel?> data) {
     return CustomCartHeader(
+      data: [
+        data.where((e) => e!.active == true).toList().length,
+        data.length,
+        data.where((e) => e!.role.contains("Extern") == false).toList().length,
+        data.where((e) => e!.role.contains("Extern")).toList().length,
+      ],
       selectedIndex: _selectedIndex,
       onSelected: (index) {
         setState(() {
@@ -140,7 +189,7 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
                         offset: Offset(
                             dx * -_controller.value, dy * -_controller.value),
                         child: StaffForm(
-                          height: 780 * _controller.value,
+                          height: 600 * _controller.value,
                           width: 680 * _controller.value,
                         )),
                   )

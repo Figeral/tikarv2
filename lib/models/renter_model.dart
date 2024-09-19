@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class RenterModel extends Equatable {
-  final int id;
+  final int? id;
   final String fname, lname, gender;
   final String? picture;
   final int tel;
@@ -10,13 +10,13 @@ class RenterModel extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   const RenterModel({
-    required this.id,
+    this.id,
     required this.fname,
     required this.lname,
     required this.gender,
     required this.tel,
     required this.isActive,
-    required this.picture,
+    this.picture,
     // required this.addedBy,
     required this.createdAt,
     required this.updatedAt,
@@ -58,7 +58,17 @@ class RenterModel extends Equatable {
   }
 
   Map<String, dynamic> toJsonWithoutId() {
-    return toJson().remove("id");
+    return {
+      'fname': fname,
+      'lname': lname,
+      'gender': gender,
+      'tel': tel,
+      'isActive': isActive,
+      "picture": picture,
+      // "addedby": addedBy.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
   }
 
   @override

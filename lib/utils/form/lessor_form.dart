@@ -1,22 +1,27 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
+import 'package:tikar/cubits/user_cubit.dart';
 import 'package:tikar/models/staff_model.dart';
 import 'package:tikar/cubits/staff_cubit.dart';
+import 'package:tikar/models/lessor_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tikar/cubits/lessor_cubit.dart';
 import 'package:tikar/extensions/extensions.dart';
 import 'package:tikar/utils/snackbar_messenger.dart';
 import 'package:tikar/views/desktop/tikar/pages/rent.dart';
 
-class StaffForm extends StatefulWidget {
+class LessorForm extends StatefulWidget {
   final double width;
   final double height;
-  const StaffForm({super.key, required this.width, required this.height});
+  const LessorForm({super.key, required this.width, required this.height});
 
   @override
-  State<StaffForm> createState() => _StaffFormState();
+  State<LessorForm> createState() => _LessorFormState();
 }
 
-class _StaffFormState extends State<StaffForm> {
+class _LessorFormState extends State<LessorForm> {
   final _formKey = GlobalKey<FormState>();
   String? _selectedJob;
   String? _selectedRole;
@@ -25,31 +30,15 @@ class _StaffFormState extends State<StaffForm> {
     TextEditingController(),
     TextEditingController(),
     TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
   ];
-  bool _isChecked = false;
+  bool _isChecked = true;
 
-  final List<String> _jobRoles = [
-    'CEO',
-    'CTO',
-    'Vice CEO',
-    'Developer',
-    'Marketing',
-    'Commercial',
-    'Designeur',
-  ];
-
-  final List<String> _roles = [
-    'Owner',
-    'Admin',
-    'Manager',
-    'Extern',
-  ];
+  final List<String> _jobRoles = ['Male', "Female"];
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.cubit<StaffCubit>();
+    final _lessorCubit = context.cubit<LessorCubit>();
+
     return widget.width >= 350
         ? SingleChildScrollView(
             child: Container(
@@ -65,10 +54,10 @@ class _StaffFormState extends State<StaffForm> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: const EdgeInsets.only(top: 18, bottom: 18),
                         child: Text(
-                          AppStrings.staff_post_header,
+                          AppStrings.lessor_post_header,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
@@ -127,56 +116,6 @@ class _StaffFormState extends State<StaffForm> {
                       TextFormField(
                         controller: _textControllers[2],
                         decoration: InputDecoration(
-                          labelText: 'Email',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            ),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter email';
-                          }
-                          // You might want to add more sophisticated email validation
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _textControllers[3],
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            ),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                          ),
-                        ),
-                        obscureText: _obscureText,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter password';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _textControllers[4],
-                        decoration: InputDecoration(
                           labelText: 'Phone Number',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
@@ -197,51 +136,18 @@ class _StaffFormState extends State<StaffForm> {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: DropdownButtonFormField<String>(
-                                value: _selectedJob,
-                                decoration: InputDecoration(
-                                  labelText: 'Job',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15),
-                                    ),
-                                  ),
-                                ),
-                                items: _jobRoles.map((String job) {
-                                  return DropdownMenuItem<String>(
-                                    value: job,
-                                    child: Text(job),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    _selectedJob = newValue;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select a job role';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: DropdownButtonFormField<String>(
                                 value: _selectedRole,
                                 decoration: InputDecoration(
-                                  labelText: 'Role',
+                                  labelText: 'Gender',
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(15),
                                     ),
                                   ),
                                 ),
-                                items: _roles.map((String role) {
+                                items: _jobRoles.map((String role) {
                                   return DropdownMenuItem<String>(
                                     value: role,
                                     child: Text(role),
@@ -254,13 +160,29 @@ class _StaffFormState extends State<StaffForm> {
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please select a role';
+                                    return 'Please select a Gender';
                                   }
                                   return null;
                                 },
                               ),
                             ),
                           ),
+                          SizedBox(
+                            width: 40,
+                          ),
+                          Expanded(
+                              child: Row(
+                            children: [
+                              Checkbox(
+                                  value: _isChecked,
+                                  onChanged: (isChecked) {
+                                    setState(() {
+                                      _isChecked = isChecked!;
+                                    });
+                                  }),
+                              const Text("Vis au Cameroon")
+                            ],
+                          ))
                         ],
                       ),
                       SizedBox(height: 24),
@@ -279,16 +201,14 @@ class _StaffFormState extends State<StaffForm> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             // Process data
-                            cubit.post(StaffModel(
+                            _lessorCubit.post(LessorModel(
                                 fname: _textControllers[0].value.text,
                                 lname: _textControllers[1].value.text,
-                                pw: _textControllers[3].value.text,
-                                tel: int.parse(_textControllers[4].value.text),
-                                active: true,
-                                role: [_selectedRole!],
-                                post: _selectedJob!,
-                                email: _textControllers[2].value.text,
-                                username: _textControllers[2].value.text));
+                                gender: _selectedRole!,
+                                tel: int.parse(_textControllers[2].value.text),
+                                inCameroon: _isChecked,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now()));
 
                             SnackBarMessenger.stateSnackMessenger(
                                 context: context,

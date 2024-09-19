@@ -87,21 +87,26 @@ class StaffVM extends BaseVM<StaffModel> {
 
   @override
   void postData(StaffModel data) async {
+    final header = await Endpoint.header;
     final endpoint = Endpoint.signIn();
 
     try {
       final response = await http.post(Uri.parse(endpoint),
-          body: data.toJsonWithoutId());
+          body: jsonEncode(data.toJsonWithoutId()), headers: header);
+      if (response.statusCode.toString().startsWith("2")) {
+        print('success');
+      }
     } catch (e) {
+      print(data.toJson());
       print("Exception caught: $e");
       if (e is FormatException) {
         throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}staff"));
+            uri: Uri.parse("${endpoint}"));
       } else if (e is HttpException) {
         rethrow;
       } else {
         throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}staff"));
+            uri: Uri.parse("${endpoint}"));
       }
     }
   }
@@ -109,9 +114,10 @@ class StaffVM extends BaseVM<StaffModel> {
   @override
   void updateData(StaffModel data) async {
     final header = await Endpoint.header;
+
     try {
       final response = await http.post(Uri.parse("${endpoint}staff"),
-          body: data.toJson(), headers: header);
+          body: jsonEncode(data.toJson()), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {

@@ -7,7 +7,7 @@ class LessorModel extends Equatable {
   final int tel;
   final bool isActive;
   final bool inCameroon;
-  final StaffModel addebBy;
+
   final DateTime createdAt;
   final DateTime updatedAt;
   const LessorModel({
@@ -18,7 +18,6 @@ class LessorModel extends Equatable {
     required this.tel,
     this.isActive = true,
     required this.inCameroon,
-    required this.addebBy,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -29,7 +28,6 @@ class LessorModel extends Equatable {
       fname: json['fname'] as String,
       lname: json['lname'] as String,
       gender: json['gender'] as String,
-      addebBy: StaffModel.fromJson(json['addedby']),
       tel: json['tel'] as int,
       isActive: json['isActive'] as bool? ?? true,
       inCameroon: json['inCameroon'] as bool,
@@ -47,19 +45,27 @@ class LessorModel extends Equatable {
       'tel': tel,
       'isActive': isActive,
       'inCameroon': inCameroon,
-      'addedby': addebBy.toJson(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
   }
+
   Map<String, dynamic> toJsonWithoutId() {
-    final json = toJson();
-    json.remove('id');
-    return json;
+    return {
+      'fname': fname,
+      'lname': lname,
+      'gender': gender,
+      'tel': tel,
+      'isActive': isActive,
+      'inCameroon': inCameroon,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
   }
+
   @override
   List<Object?> get props =>
-      [id, fname, lname, gender, tel, isActive, inCameroon, addebBy];
+      [id, fname, lname, gender, tel, isActive, inCameroon];
   LessorModel copyWith(
           {String? fname,
           String? lname,
@@ -76,8 +82,7 @@ class LessorModel extends Equatable {
         gender: gender ?? this.gender,
         tel: tel ?? this.tel,
         inCameroon: inCameroon ?? this.inCameroon,
-        addebBy: addedby ?? addebBy,
-      createdAt: createdAt ?? this.createdAt,
+        createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
 }

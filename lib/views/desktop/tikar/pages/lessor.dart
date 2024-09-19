@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tikar/cubits/lessor_cubit.dart';
+import 'package:tikar/models/lessor_model.dart';
 import 'package:tikar/viewmodels/lessor_vm.dart';
 import 'package:tikar/extensions/extensions.dart';
+import 'package:tikar/utils/form/lessor_form.dart';
+import 'package:tikar/utils/tables/lessor_table.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 
 class Lessor extends StatefulWidget {
@@ -42,10 +47,24 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final _cubit = BlocProvider.of<LessorCubit>(context);
+    _cubit.fetch();
     return Scaffold(
       floatingActionButton: defaultAnimatedFAB(),
       appBar: AppBar(
-        title: const Text('AppBar with hamburger button'),
+        title: const Row(
+          children: [
+            Text(
+              'Actifs',
+              style: TextStyle(color: AppColors.grey),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 3, right: 3),
+              child: Text('/'),
+            ),
+            Text('Lessor'),
+          ],
+        ),
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -97,57 +116,83 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
         width: context.width,
         height: context.height,
         child: SingleChildScrollView(
-          child: Center(
-            child: Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CustomCartHeader(
-                      selectedIndex: _selectedIndex,
-                      onSelected: (index) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                      },
-                      cardUtile: [
-                        CardUtile(
-                            name: AppStrings.lessors_state[0],
-                            value: 0,
-                            icon: Icons.manage_accounts_outlined),
-                        CardUtile(
-                            name: AppStrings.lessors_state[1],
-                            value: 1,
-                            icon: Icons.man),
-                        CardUtile(
-                          name: AppStrings.lessors_state[2],
-                          value: 2,
-                          otherIcon: "assets/images/cameroon.svg",
-                        ),
-                        CardUtile(
-                            name: AppStrings.lessors_state[3],
-                            value: 3,
-                            icon: Icons.rocket_launch_outlined)
-                      ],
-                    ),
-                  ],
-                ),
-                Visibility(
-                  visible: _isVisible,
-                  child: GestureDetector(
-                    onTap: toggle,
-                    child: Container(
-                      width: context.width,
-                      height: context.height + context.height / 2,
-                      color: const Color.fromARGB(60, 12, 12, 12),
-                    ),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Center(
+                      child: FutureBuilder(
+                          future: _cubit.getData(),
+                          builder: (_, snapshot) {
+                            if (_cubit.state != null) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  cardHeader(_cubit.state!),
+                                  SizedBox(
+                                    height: 60,
+                                  ),
+                                  Container(
+                                      width: context.width * 0.6,
+                                      height: context.width * 0.6,
+                                      child: LessorPaginatedSortableTable(
+                                          data: _cubit.lessor!)),
+                                ],
+                              );
+                            }
+                            return Container();
+                          }))
+                ],
+              ),
+              Visibility(
+                visible: _isVisible,
+                child: GestureDetector(
+                  onTap: toggle,
+                  child: Container(
+                    width: context.width,
+                    height: context.height + context.height / 2,
+                    color: const Color.fromARGB(60, 12, 12, 12),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  CustomCartHeader cardHeader(List<LessorModel?> data) {
+    return CustomCartHeader(
+      data: [
+        data.where((e) => e!.isActive == true).toList().length,
+        data.length,
+        data.where((e) => e!.inCameroon == true).toList().length,
+        data.where((e) => e!.inCameroon == false).toList().length,
+      ],
+      selectedIndex: _selectedIndex,
+      onSelected: (index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      cardUtile: [
+        CardUtile(
+            name: AppStrings.lessors_state[0],
+            value: 0,
+            icon: Icons.manage_accounts_outlined),
+        CardUtile(name: AppStrings.lessors_state[1], value: 1, icon: Icons.man),
+        CardUtile(
+          name: AppStrings.lessors_state[2],
+          value: 2,
+          otherIcon: "assets/images/cameroon.svg",
+        ),
+        CardUtile(
+            name: AppStrings.lessors_state[3],
+            value: 3,
+            icon: Icons.rocket_launch_outlined)
+      ],
     );
   }
 
@@ -180,7 +225,10 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
                     child: Transform.translate(
                         offset: Offset(
                             dx * -_controller.value, dy * -_controller.value),
-                        child: child),
+                        child: LessorForm(
+                          height: 600 * _controller.value,
+                          width: 680 * _controller.value,
+                        )),
                   )
                 : Opacity(
                     opacity: 0,
