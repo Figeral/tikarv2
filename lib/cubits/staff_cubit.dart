@@ -1,13 +1,15 @@
+import 'dart:io';
 import 'package:tikar/cubits/base_cubit.dart';
+import 'package:tikar/cubits/base_state.dart';
 import 'package:tikar/models/staff_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/viewmodels/staff_vm.dart';
 import 'package:tikar/data/local_data_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class StaffCubit extends Cubit<List<StaffModel?>?>
+class StaffCubit extends Cubit<BaseState<List<StaffModel?>?>>
     implements BaseCubit<StaffModel> {
-  StaffCubit() : super(null) {}
+  StaffCubit() : super(Initial());
 
   final _staffVM = StaffVM();
   Future<LocalDataStorage<StaffModel>> get cache async =>
@@ -18,22 +20,36 @@ class StaffCubit extends Cubit<List<StaffModel?>?>
 
   @override
   void delete(int id) async {
-    _staffVM.deleteData(id);
+    emit(Loading());
+    try {
+      _staffVM.deleteData(id);
+      emit(Valid());
+    } catch (e) {
+      if (e is FormatException) {
+        emit(Error(e.message));
+      } else if (e is HttpException) {
+        emit(Error(e.message));
+      }
+    }
     final _cache = await cache;
-    await _cache.clear();
-    fetch();
+    await _cache.clearAt(id);
   }
 
   @override
   void fetch() async {
+    emit(Loading());
     final data = await _staffVM.getData();
-    final _cache = await cache;
-    data.forEach((e) async {
-      await _cache.save(e);
-    });
-    _cache.getData().listen((e) {
-      emit(e);
-    });
+    if (data.isNotEmpty) {
+      final _cache = await cache;
+      data.forEach((e) async {
+        await _cache.save(e);
+      });
+      _cache.getData().listen((e) {
+        emit(Success(e));
+      });
+    } else {
+      emit(NotFound());
+    }
   }
 
   @override
@@ -43,20 +59,42 @@ class StaffCubit extends Cubit<List<StaffModel?>?>
 
   @override
   void post(StaffModel data) async {
-    _staffVM.postData(data);
+    emit(Loading());
+    try {
+      _staffVM.postData(data);
+      emit(Valid());
+    } catch (e) {
+      if (e is FormatException) {
+        emit(Error(e.message));
+      } else if (e is HttpException) {
+        emit(Error(e.message));
+      }
+    }
   }
 
   @override
   void update(StaffModel data) async {
-    _staffVM.updateData(data);
+    emit(Loading());
+    try {
+      _staffVM.updateData(data);
+      emit(Valid());
+    } catch (e) {
+      if (e is FormatException) {
+        emit(Error(e.message));
+      } else if (e is HttpException) {
+        emit(Error(e.message));
+      }
+    }
   }
 
   Future<void> getData() async {
     final _cache = await cache;
     _cache.getData().listen((e) {
-      emit(e);
+      if (e.isNotEmpty) {
+        emit(Success(e));
+      } else {
+        emit(NotFound());
+      }
     });
   }
-
-  List<StaffModel?>? get staff => state;
 }

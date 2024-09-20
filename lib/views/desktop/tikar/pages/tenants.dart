@@ -2,13 +2,18 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
+import 'package:tikar/cubits/base_state.dart';
 import 'package:tikar/utils/icons_utile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tikar/cubits/renter_cubit.dart';
 import 'package:tikar/models/renter_model.dart';
 import 'package:tikar/utils/form/staff_form.dart';
 import 'package:tikar/extensions/extensions.dart';
 import 'package:tikar/utils/form/renter_form.dart';
+import 'package:tikar/utils/widgets/App_loader.dart';
 import 'package:tikar/utils/tables/renter_table.dart';
+import 'package:tikar/views/desktop/tikar/main_screen.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 
 class Tenant extends StatefulWidget {
@@ -21,7 +26,7 @@ class Tenant extends StatefulWidget {
 class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
   bool _isVisible = false;
   late AnimationController _controller;
-  // late List<RenterModel> renters;
+  // late List<RenterModel> renters
 
   @override
   void initState() {
@@ -47,8 +52,40 @@ class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final _cubit = context.cubit<RenterCubit>();
-    _cubit.fetch();
+    // final _cubit = context.cubit<RenterCubit>();
+    // _cubit.fetch();
+    return BlocConsumer<RenterCubit, BaseState<List<RenterModel?>?>>(
+      listener: (context, state) {
+        // performs a  fetch on loading state   a
+        if (state is Valid) {
+          context.read<RenterCubit>().fetch();
+        }
+      },
+      listenWhen: (previous, current) {
+        return current is Loading ||
+            current is Initial ||
+            current is Error ||
+            current is Valid;
+      },
+      builder: (BuildContext context, state) {
+        bool _isLoading = state is Loading || state is Initial;
+        return Skeletonizer(
+          enabled: _isLoading,
+          child: switch (state) {
+            Initial() || Loading() => Builder(builder: (_) {
+                context.read<RenterCubit>().getData();
+                return AppLoader.adaptative();
+              }),
+            Success() => body(context, state.data),
+            NotFound() => AppLoader.customLoader("Nothing found , downloading"),
+            _ => Container(),
+          },
+        );
+      },
+    );
+  }
+
+  Widget body(BuildContext context, List<RenterModel?>? _cubit) {
     return Scaffold(
       floatingActionButton: defaultAnimatedFAB(),
       body: SizedBox(
@@ -61,26 +98,22 @@ class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Center(
-                    child: FutureBuilder(
-                        future: _cubit.getData(),
-                        builder: (_, snapshot) {
-                          if (_cubit.state != null) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                cardHeader(_cubit.state!),
-                                Container(
-                                    width: context.width * 0.6,
-                                    height: context.width * 0.6,
-                                    child: RenterPaginatedSortableTable(
-                                        data: _cubit.renter!))
-                              ],
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }),
-                  )
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      customAppBar(context),
+                      cardHeader(_cubit!),
+                      Container(
+                          width: context.width * 0.6,
+                          height: context.width * 0.6,
+                          child: RenterPaginatedSortableTable(
+                            data: _cubit,
+                            onTap: (RenterModel model) {
+                              print(model);
+                            },
+                          ))
+                    ],
+                  ))
                 ],
               ),
               Visibility(
@@ -97,6 +130,57 @@ class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  SizedBox customAppBar(BuildContext context) {
+    return SizedBox(
+      width: context.width,
+      height: 60,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 50,
+          ),
+          const Text(
+            'Actifs',
+            style: TextStyle(
+                color: AppColors.grey,
+                fontSize: 22,
+                fontWeight: FontWeight.bold),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 3, right: 3),
+            child: Text('/'),
+          ),
+          const Text(
+            'Staff',
+            style: TextStyle(
+                color: AppColors.blue,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            width: 30,
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 5),
+                child: IconButton(
+                    onPressed: () {}, icon: const Icon(Icons.settings)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 10),
+                child: IconButton(
+                    onPressed: context.read<RenterCubit>().fetch,
+                    icon: const Icon(Icons.replay)),
+              )
+            ],
+          )
+        ],
       ),
     );
   }

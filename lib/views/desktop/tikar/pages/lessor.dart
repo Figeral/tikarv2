@@ -129,7 +129,7 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  cardHeader(_cubit.state!),
+                                  //  cardHeader(_cubit.state!),
                                   SizedBox(
                                     height: 60,
                                   ),
@@ -137,7 +137,7 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
                                       width: context.width * 0.6,
                                       height: context.width * 0.6,
                                       child: LessorPaginatedSortableTable(
-                                          data: _cubit.lessor!)),
+                                          data: [])),
                                 ],
                               );
                             }

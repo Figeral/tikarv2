@@ -141,7 +141,7 @@ class _LessorPaginatedSortableTableState
             ),
             child: PaginatedDataTable(
               header: const Text(
-                'Donnees des Employees',
+                'Donnees des Bailleurs',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
               columns: [

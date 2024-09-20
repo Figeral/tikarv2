@@ -10,76 +10,37 @@ class AssetVM extends BaseVM<AssetModel> {
   @override
   void deleteData(int id) async {
     final header = await Endpoint.header;
-    try {
-      final response = await http.delete(
-          Uri.parse(
-            "${endpoint}asset/$id",
-          ),
-          headers: header);
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}asset/$id"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}asset/$id"));
-      }
-    }
+
+    final response =
+        await http.delete(Uri.parse("${endpoint}asset/$id"), headers: header);
   }
 
   @override
   Future<List<AssetModel>> getData() async {
     final header = await Endpoint.header;
-    try {
-      final response = await http.get(Uri.parse("${endpoint}assets/parent"),
-          headers: header);
-      if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
-        return body.map((data) => AssetModel.fromJson(data)).toList();
-      } else {
-        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
-            uri: Uri.parse("${endpoint}assets/parent"));
-      }
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}assets/parent"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}assets/parent"));
-      }
+
+    final response =
+        await http.get(Uri.parse("${endpoint}assets/parent"), headers: header);
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
+      return body.map((data) => AssetModel.fromJson(data)).toList();
+    } else {
+      throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+          uri: Uri.parse("${endpoint}assets/parent"));
     }
   }
 
   Future<List<AssetModel>> getDataBuilding() async {
     final header = await Endpoint.header;
-    try {
-      final response = await http.get(Uri.parse("${endpoint}assets/buildings"),
-          headers: header);
-      if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
-        return body.map((data) => AssetModel.fromJson(data)).toList();
-      } else {
-        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
-            uri: Uri.parse("${endpoint}assets/buildings"));
-      }
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}assets/buildings"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}assets/buildings"));
-      }
+
+    final response = await http.get(Uri.parse("${endpoint}assets/buildings"),
+        headers: header);
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
+      return body.map((data) => AssetModel.fromJson(data)).toList();
+    } else {
+      throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+          uri: Uri.parse("${endpoint}assets/buildings"));
     }
   }
 
@@ -109,56 +70,39 @@ class AssetVM extends BaseVM<AssetModel> {
     }
   }
 
-  @override
-  Future<AssetModel> getDataById(int id) async {
-    final header = await Endpoint.header;
-    try {
-      final response =
-          await http.get(Uri.parse("${endpoint}asset/$id"), headers: header);
-      if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as Map<String, dynamic>;
-        return AssetModel.fromJson(body);
-      } else {
-        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
-            uri: Uri.parse("${endpoint}asset/{$id}"));
-      }
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}asset/$id"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}asset/$id"));
-      }
-    }
-  }
+  // @override
+  // Future<AssetModel> getDataById(int id) async {
+  //   final header = await Endpoint.header;
+  //   try {
+  //     final response =
+  //         await http.get(Uri.parse("${endpoint}asset/$id"), headers: header);
+  //     if (response.statusCode == 200) {
+  //       final body = jsonDecode(response.body) as Map<String, dynamic>;
+  //       return AssetModel.fromJson(body);
+  //     } else {
+  //       throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+  //           uri: Uri.parse("${endpoint}asset/{$id}"));
+  //     }
+  //   } catch (e) {
+  //     print("Exception caught: $e");
+  //     if (e is FormatException) {
+  //       throw HttpException("Invalid JSON response",
+  //           uri: Uri.parse("${endpoint}asset/$id"));
+  //     } else if (e is HttpException) {
+  //       rethrow;
+  //     } else {
+  //       throw HttpException("Network error: ${e.toString()}",
+  //           uri: Uri.parse("${endpoint}asset/$id"));
+  //     }
+  //   }
+  // }
 
   @override
   void postData(AssetModel data) async {
-    // TODO: implement getDataById
-    throw UnimplementedError();
-  }
-
-  void postDataBuilding(AssetModel data) async {
     final header = await Endpoint.header;
-    try {
-      final response = await http.post(Uri.parse("${endpoint}asset/building"),
-          body: data.toJsonWithoutId(), headers: header);
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}asset/building"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}asset/building"));
-      }
-    }
+
+    final response = await http.post(Uri.parse("${endpoint}asset"),
+        body: data.toJsonWithoutId(), headers: header);
   }
 
   void postDataResidence(AssetModel data) async {
@@ -182,6 +126,14 @@ class AssetVM extends BaseVM<AssetModel> {
 
   @override
   void updateData(AssetModel data) async {
+    final header = await Endpoint.header;
+
+    final response = await http.post(Uri.parse("${endpoint}asset"),
+        body: jsonEncode(data.toJson()), headers: header);
+  }
+
+  @override
+  Future<AssetModel> getDataById(int id) {
     // TODO: implement getDataById
     throw UnimplementedError();
   }

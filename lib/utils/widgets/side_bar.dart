@@ -60,14 +60,14 @@ class _SideBarState extends State<SideBar> {
                     const EdgeInsets.symmetric(horizontal: 13, vertical: 15),
                 child: Icon(
                   data.menu[index].icon,
-                  color: isSelected || isHovered ? AppColors.blue : Colors.grey,
+                  color: isSelected ? AppColors.blue : Colors.grey,
                 ),
               ),
               Text(
                 data.menu[index].title,
                 style: TextStyle(
                   fontSize: 16,
-                  color: isSelected || isHovered ? AppColors.blue : Colors.grey,
+                  color: isSelected ? AppColors.blue : Colors.grey,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               )

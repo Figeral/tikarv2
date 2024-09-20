@@ -142,7 +142,7 @@ class _StaffPaginatedSortableTableState
             ),
             child: PaginatedDataTable(
               header: const Text(
-                'Donnees des Employees',
+                'Donnees des Employee',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
               columns: [

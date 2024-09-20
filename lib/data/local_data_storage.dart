@@ -50,6 +50,17 @@ class LocalDataStorage<T> {
         dataCollectionKey, jsonEncode(_controller.value));
   }
 
+  Future<void> clearAt(int index) async {
+    final array = [..._controller.value];
+    final copy = array.toSet().toList();
+
+    copy.removeAt(index);
+    print("delete at $T");
+    _controller.add(copy);
+    await _preferences.setString(
+        dataCollectionKey, jsonEncode(_controller.value));
+  }
+
   Future<void> clear() async => _controller.add([]);
   void dispose() => _controller.close();
 }

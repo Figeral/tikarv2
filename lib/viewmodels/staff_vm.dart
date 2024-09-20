@@ -11,77 +11,41 @@ class StaffVM extends BaseVM<StaffModel> {
   @override
   void deleteData(int id) async {
     final header = await Endpoint.header;
-    try {
-      final response =
-          await http.delete(Uri.parse("${endpoint}staff/$id"), headers: header);
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}staff/$id"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}staff/$id"));
-      }
-    }
+
+    final response =
+        await http.delete(Uri.parse("${endpoint}staff/$id"), headers: header);
   }
 
   @override
   Future<List<StaffModel>> getData() async {
     final header = await Endpoint.header;
-    try {
-      final response =
-          await http.get(Uri.parse("${endpoint}staffs"), headers: header);
-      if (response.statusCode == 200) {
-        final List<dynamic> body = jsonDecode(response.body);
-        print(body);
-        return body
-            .map((data) => StaffModel.fromJson(data as Map<String, dynamic>))
-            .toList();
-      } else {
-        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
-            uri: Uri.parse("${endpoint}staffs"));
-      }
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}staffs"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}staffs"));
-      }
+
+    final response =
+        await http.get(Uri.parse("${endpoint}staffs"), headers: header);
+    if (response.statusCode == 200) {
+      final List<dynamic> body = jsonDecode(response.body);
+      print(body);
+      return body
+          .map((data) => StaffModel.fromJson(data as Map<String, dynamic>))
+          .toList();
+    } else {
+      throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+          uri: Uri.parse("${endpoint}staffs"));
     }
   }
 
   @override
   Future<StaffModel> getDataById(int id) async {
     final header = await Endpoint.header;
-    try {
-      final response =
-          await http.get(Uri.parse("${endpoint}staff/$id"), headers: header);
-      if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as Map<String, dynamic>;
-        return StaffModel.fromJson(body);
-      } else {
-        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
-            uri: Uri.parse("${endpoint}staff/{$id}"));
-      }
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}staff/$id"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}staff/$id"));
-      }
+
+    final response =
+        await http.get(Uri.parse("${endpoint}staff/$id"), headers: header);
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      return StaffModel.fromJson(body);
+    } else {
+      throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+          uri: Uri.parse("${endpoint}staff/{$id}"));
     }
   }
 
@@ -90,24 +54,10 @@ class StaffVM extends BaseVM<StaffModel> {
     final header = await Endpoint.header;
     final endpoint = Endpoint.signIn();
 
-    try {
-      final response = await http.post(Uri.parse(endpoint),
-          body: jsonEncode(data.toJsonWithoutId()), headers: header);
-      if (response.statusCode.toString().startsWith("2")) {
-        print('success');
-      }
-    } catch (e) {
-      print(data.toJson());
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}"));
-      }
+    final response = await http.post(Uri.parse(endpoint),
+        body: jsonEncode(data.toJsonWithoutId()), headers: header);
+    if (response.statusCode.toString().startsWith("2")) {
+      print('success');
     }
   }
 
@@ -115,20 +65,7 @@ class StaffVM extends BaseVM<StaffModel> {
   void updateData(StaffModel data) async {
     final header = await Endpoint.header;
 
-    try {
-      final response = await http.post(Uri.parse("${endpoint}staff"),
-          body: jsonEncode(data.toJson()), headers: header);
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}staff"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}staff"));
-      }
-    }
+    final response = await http.post(Uri.parse("${endpoint}staff"),
+        body: jsonEncode(data.toJson()), headers: header);
   }
 }

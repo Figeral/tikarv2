@@ -7,9 +7,11 @@ import 'package:tikar/models/lessor_model.dart';
 import 'package:tikar/extensions/extensions.dart';
 
 class RenterPaginatedSortableTable extends StatefulWidget {
+  void Function(RenterModel model) onTap;
   final List<RenterModel?> data;
 
-  const RenterPaginatedSortableTable({super.key, required this.data});
+  RenterPaginatedSortableTable(
+      {super.key, required this.data, required this.onTap});
 
   @override
   _RenterPaginatedSortableTableState createState() =>
@@ -141,7 +143,7 @@ class _RenterPaginatedSortableTableState
             ),
             child: PaginatedDataTable(
               header: const Text(
-                'Donnees des Employees',
+                'Donnees des Locatairs',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
               columns: [
@@ -198,11 +200,18 @@ class _RenterPaginatedSortableTableState
                   },
                 ),
               ],
-              source: _DataSource(pageData, (index) {
-                setState(() {
-                  _hoveredIndex = index;
-                });
-              }, _hoveredIndex),
+              source: _DataSource(
+                pageData,
+                (index) {
+                  setState(() {
+                    _hoveredIndex = index;
+                  });
+                },
+                _hoveredIndex,
+                model: (RenterModel model) {
+                  widget.onTap(model);
+                },
+              ),
               rowsPerPage: _rowsPerPage,
               onRowsPerPageChanged: (value) {
                 setState(() {
@@ -251,14 +260,17 @@ class _DataSource extends DataTableSource {
   final List<RenterModel> _data;
   final Function(int?) onHover;
   final int? hoveredIndex;
-
-  _DataSource(this._data, this.onHover, this.hoveredIndex);
+  void Function(RenterModel model) model;
+  _DataSource(this._data, this.onHover, this.hoveredIndex,
+      {required this.model});
 
   @override
   DataRow getRow(int index) {
     final item = _data[index];
     return DataRow(
-      onSelectChanged: (value) => print(item.fname),
+      onSelectChanged: (value) {
+        model(item);
+      },
       color: WidgetStateProperty.resolveWith<Color?>(
         (Set<WidgetState> states) {
           if (index == hoveredIndex) {

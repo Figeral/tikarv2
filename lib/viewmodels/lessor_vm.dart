@@ -10,50 +10,26 @@ class LessorVM extends BaseVM<LessorModel> {
   @override
   void deleteData(int id) async {
     final header = await Endpoint.header;
-    try {
-      final response = await http.delete(Uri.parse("${endpoint}lessor/$id"),
-          headers: header);
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}lessor/$id"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}lessor/$id"));
-      }
-    }
+
+    final response =
+        await http.delete(Uri.parse("${endpoint}lessor/$id"), headers: header);
   }
 
   @override
   Future<List<LessorModel>> getData() async {
     final header = await Endpoint.header;
-    try {
-      final response =
-          await http.get(Uri.parse("${endpoint}lessors"), headers: header);
-      if (response.statusCode == 200) {
-        final List<dynamic> body = jsonDecode(response.body);
 
-        return body
-            .map((data) => LessorModel.fromJson(data as Map<String, dynamic>))
-            .toList();
-      } else {
-        throw HttpException("HTTP ${response.statusCode}: ${response.body}",
-            uri: Uri.parse("${endpoint}lessors"));
-      }
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}lessors"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}lessors"));
-      }
+    final response =
+        await http.get(Uri.parse("${endpoint}lessors"), headers: header);
+    if (response.statusCode == 200) {
+      final List<dynamic> body = jsonDecode(response.body);
+
+      return body
+          .map((data) => LessorModel.fromJson(data as Map<String, dynamic>))
+          .toList();
+    } else {
+      throw HttpException("HTTP ${response.statusCode}: ${response.body}",
+          uri: Uri.parse("${endpoint}lessors"));
     }
   }
 
@@ -89,41 +65,17 @@ class LessorVM extends BaseVM<LessorModel> {
   @override
   void postData(LessorModel data) async {
     final header = await Endpoint.header;
-    try {
-      print(jsonEncode(data.toJson()));
-      final response = await http.post(Uri.parse("${endpoint}lessor"),
-          body: jsonEncode(data.toJsonWithoutId()), headers: header);
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}lessor"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}lessor"));
-      }
-    }
+
+    print(jsonEncode(data.toJson()));
+    final response = await http.post(Uri.parse("${endpoint}lessor"),
+        body: jsonEncode(data.toJsonWithoutId()), headers: header);
   }
 
   @override
   void updateData(LessorModel data) async {
     final header = await Endpoint.header;
-    try {
-      final response = await http.post(Uri.parse("${endpoint}lessor"),
-          body: jsonEncode(data.toJson()), headers: header);
-    } catch (e) {
-      print("Exception caught: $e");
-      if (e is FormatException) {
-        throw HttpException("Invalid JSON response",
-            uri: Uri.parse("${endpoint}lessor"));
-      } else if (e is HttpException) {
-        rethrow;
-      } else {
-        throw HttpException("Network error: ${e.toString()}",
-            uri: Uri.parse("${endpoint}lessor"));
-      }
-    }
+
+    final response = await http.post(Uri.parse("${endpoint}lessor"),
+        body: jsonEncode(data.toJson()), headers: header);
   }
 }

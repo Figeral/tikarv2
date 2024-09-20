@@ -22,5 +22,27 @@ class AppLoader {
           ),
         ),
       );
+  static Widget customLoader(String message) => Scaffold(
+        body: Center(
+          child: SizedBox(
+            height: 100,
+            width: 200,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  message,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 25),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                const CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        ),
+      );
   static Widget adaptative() => const CircularProgressIndicator.adaptive();
 }

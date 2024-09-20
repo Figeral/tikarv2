@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:tikar/cubits/base_cubit.dart';
+import 'package:tikar/cubits/base_state.dart';
 import 'package:tikar/models/rent_model.dart';
 import 'package:tikar/viewmodels/rent_vm.dart';
 import 'package:tikar/models/renter_model.dart';
@@ -6,9 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/data/local_data_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RentCubit extends Cubit<List<RentModel?>?>
+
+class RentCubit extends Cubit<BaseState<List<RentModel?>?>>
     implements BaseCubit<RentModel> {
-  RentCubit() : super(null);
+  RentCubit() : super(Initial());
   final _rentVM = RentVM();
   Future<LocalDataStorage<RentModel>> get cache async =>
       LocalDataStorage<RentModel>(
@@ -18,22 +21,36 @@ class RentCubit extends Cubit<List<RentModel?>?>
 
   @override
   void delete(int id) async {
-    _rentVM.deleteData(id);
+    emit(Loading());
+    try {
+      _rentVM.deleteData(id);
+      emit(Valid());
+    } catch (e) {
+      if (e is FormatException) {
+        emit(Error(e.message));
+      } else if (e is HttpException) {
+        emit(Error(e.message));
+      }
+    }
     final _cache = await cache;
-    await _cache.clear();
-    fetch();
+    await _cache.clearAt(id);
   }
 
   @override
   void fetch() async {
+    emit(Loading());
     final data = await _rentVM.getData();
-    final _cache = await cache;
-    data.forEach((e) async {
-      await _cache.save(e);
-    });
-    _cache.getData().listen((e) {
-      emit(e);
-    });
+    if (data.isNotEmpty) {
+      final _cache = await cache;
+      data.forEach((e) async {
+        await _cache.save(e);
+      });
+      _cache.getData().listen((e) {
+        emit(Success(e));
+      });
+    } else {
+      emit(NotFound());
+    }
   }
 
   @override
@@ -44,19 +61,41 @@ class RentCubit extends Cubit<List<RentModel?>?>
   Future<void> getData() async {
     final _cache = await cache;
     _cache.getData().listen((e) {
-      emit(e);
+      if (e.isNotEmpty) {
+        emit(Success(e));
+      } else {
+        emit(NotFound());
+      }
     });
   }
 
-  List<RentModel?>? get rent => state;
-
   @override
   void post(RentModel data) {
-    _rentVM.postData(data);
+    emit(Loading());
+    try {
+      _rentVM.postData(data);
+      emit(Valid());
+    } catch (e) {
+      if (e is FormatException) {
+        emit(Error(e.message));
+      } else if (e is HttpException) {
+        emit(Error(e.message));
+      }
+    }
   }
 
   @override
   void update(RentModel data) {
-    _rentVM.updateData(data);
+    emit(Loading());
+    try {
+      _rentVM.updateData(data);
+      emit(Valid());
+    } catch (e) {
+      if (e is FormatException) {
+        emit(Error(e.message));
+      } else if (e is HttpException) {
+        emit(Error(e.message));
+      }
+    }
   }
 }

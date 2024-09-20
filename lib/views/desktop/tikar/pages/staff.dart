@@ -91,15 +91,14 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              CartHeader(_cubit.state!),
+                              // CartHeader(_cubit.state!),
                               SizedBox(
                                 height: 60,
                               ),
                               Container(
                                   width: context.width * 0.6,
                                   height: context.width * 0.6,
-                                  child: StaffPaginatedSortableTable(
-                                      data: _cubit.staff!)),
+                                  child: StaffPaginatedSortableTable(data: [])),
                             ],
                           );
                         }
