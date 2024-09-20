@@ -48,11 +48,12 @@ class AssetCubit extends Cubit<List<AssetModel?>?>
     _assetVM.updateData(data);
   }
 
-  Future<void> getData() async {
+  Future<List<AssetModel?>?> getData() async {
     final _cache = await cache;
     _cache.getData().listen((e) {
       emit(e);
     });
+    return state;
   }
 
   List<AssetModel?>? get asset => state;

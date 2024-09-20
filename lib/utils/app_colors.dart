@@ -6,6 +6,6 @@ class AppColors {
   static const Color deepPurple = Colors.deepPurple;
   static const Color grey = Colors.grey;
   static Color white = Colors.white;
-  static const Color golden = Color.fromRGBO(185, 163, 101, 1);
-  static const Color blue = Color.fromRGBO(35, 68, 149, 1);
+  static const Color golden = Color(0xfffab019);
+  static const Color blue = Color(0xff0114f4);
 }

@@ -90,7 +90,7 @@ class LessorVM extends BaseVM<LessorModel> {
   void postData(LessorModel data) async {
     final header = await Endpoint.header;
     try {
-      print(data.toJson());
+      print(jsonEncode(data.toJson()));
       final response = await http.post(Uri.parse("${endpoint}lessor"),
           body: jsonEncode(data.toJsonWithoutId()), headers: header);
     } catch (e) {

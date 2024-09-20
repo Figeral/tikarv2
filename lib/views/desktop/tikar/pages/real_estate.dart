@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
 import 'package:tikar/utils/icons_utile.dart';
+import 'package:tikar/utils/form/asset_form.dart';
 import 'package:tikar/extensions/extensions.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 import 'package:tikar/utils/widgets/paginated_data_table.dart';
@@ -186,7 +187,10 @@ class _RealEstateState extends State<RealEstate>
                     child: Transform.translate(
                         offset: Offset(
                             dx * -_controller.value, dy * -_controller.value),
-                        child: child),
+                        child: AssetForm(
+                          height: 400 * _controller.value,
+                          width: 680 * _controller.value,
+                        )),
                   )
                 : Opacity(
                     opacity: 0,

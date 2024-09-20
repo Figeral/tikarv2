@@ -35,7 +35,9 @@ class LocalDataStorage<T> {
   Stream<List<T?>> getData() => _controller.asBroadcastStream();
 
   Future<void> save(T data) async {
-    final copy = [..._controller.value];
+    final array = [..._controller.value];
+    final copy = array.toSet().toList();
+    print("value from cache : $copy");
     final dataIndex = copy.indexWhere((currentData) => currentData == data);
     if (dataIndex >= 0) {
       copy[dataIndex] = data;

@@ -50,8 +50,8 @@ class _LessorPaginatedSortableTableState
               : b.gender.compareTo(a.gender);
         case 3:
           return _sortAscending
-              ? a.inCameroon.toString().compareTo(b.inCameroon.toString())
-              : b.inCameroon.toString().compareTo(a.inCameroon.toString());
+              ? a.addedBy!.fname.compareTo(b.addedBy!.fname)
+              : b.addedBy!.fname.compareTo(a.addedBy!.fname);
         case 4:
           return _sortAscending
               ? a.isActive.toString().compareTo(b.isActive.toString())
@@ -72,7 +72,8 @@ class _LessorPaginatedSortableTableState
           bool matchesSearch =
               item.fname.toLowerCase().contains(lowercaseQuery) ||
                   item.lname.toLowerCase().contains(lowercaseQuery) ||
-                  (item.gender.toLowerCase().contains(lowercaseQuery));
+                  (item.gender.toLowerCase().contains(lowercaseQuery)) ||
+                  item.addedBy!.fname.toLowerCase().contains(lowercaseQuery);
 
           bool matchesActiveFilter = !_showActiveOnly || item.isActive;
 
@@ -176,7 +177,7 @@ class _LessorPaginatedSortableTableState
                   },
                 ),
                 DataColumn(
-                  label: const Text('Vis Au CMR'),
+                  label: const Text('Ajouter par'),
                   onSort: (columnIndex, ascending) {
                     setState(() {
                       _sortColumnIndex = columnIndex;
@@ -269,7 +270,7 @@ class _DataSource extends DataTableSource {
         DataCell(Text(item.fname)),
         DataCell(Text(item.lname)),
         DataCell(Text(item.gender)),
-        DataCell(Text(item.inCameroon ? 'Yes' : 'No')),
+        DataCell(Text("${item.addedBy!.fname} " + " ${item.addedBy!.lname}")),
         DataCell(Text(item.isActive ? 'Yes' : 'No')),
       ],
       // onHover: (isHovered) {

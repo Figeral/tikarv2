@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:tikar/models/staff_model.dart';
 
 class RenterModel extends Equatable {
   final int? id;
@@ -6,7 +7,7 @@ class RenterModel extends Equatable {
   final String? picture;
   final int tel;
   final bool isActive;
-//  final StaffModel addedBy;
+  final StaffModel? addedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
   const RenterModel({
@@ -17,29 +18,27 @@ class RenterModel extends Equatable {
     required this.tel,
     required this.isActive,
     this.picture,
-    // required this.addedBy,
+    this.addedBy,
     required this.createdAt,
     required this.updatedAt,
   });
 
   factory RenterModel.fromJson(Map<String, dynamic> json) {
     return RenterModel(
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : DateTime.now(),
-      id: json['id'] as int,
-      gender: json['gender'] as String? ?? '',
-      fname: json['fname'] as String? ?? '',
-      lname: json['lname'] as String? ?? '',
-      tel: json['tel'] as int? ?? 0,
-      picture: json['picture'] as String?,
-      isActive: json['active'] as bool? ?? false,
-
-      //   addedBy: StaffModel.fromJson(json['addedby'])
-    );
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'])
+            : DateTime.now(),
+        updatedAt: json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'])
+            : DateTime.now(),
+        id: json['id'] as int,
+        gender: json['gender'] as String? ?? '',
+        fname: json['fname'] as String? ?? '',
+        lname: json['lname'] as String? ?? '',
+        tel: json['tel'] as int? ?? 0,
+        picture: json['picture'] as String?,
+        isActive: json['active'] as bool? ?? false,
+        addedBy: StaffModel.fromJson(json['addedStaff']));
   }
 
   Map<String, dynamic> toJson() {
@@ -51,7 +50,7 @@ class RenterModel extends Equatable {
       'tel': tel,
       'isActive': isActive,
       "picture": picture,
-      // "addedby": addedBy.toJson(),
+      "addedStaff": addedBy?.toJson(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -65,7 +64,7 @@ class RenterModel extends Equatable {
       'tel': tel,
       'isActive': isActive,
       "picture": picture,
-      // "addedby": addedBy.toJson(),
+      "addedStaff": addedBy?.toJson(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -78,8 +77,11 @@ class RenterModel extends Equatable {
         lname,
         gender,
         tel,
-        isActive, picture,
-        //  addedBy,
+        isActive,
+        picture,
+        addedBy,
+        createdAt,
+        updatedAt
       ];
   RenterModel copyWith({
     String? fname,
@@ -90,7 +92,7 @@ class RenterModel extends Equatable {
     String? picture,
     DateTime? createdAt,
     DateTime? updatedAt,
-    // StaffModel? staff,
+    StaffModel? staff,
   }) =>
       RenterModel(
         id: id,
@@ -100,8 +102,17 @@ class RenterModel extends Equatable {
         tel: this.tel,
         isActive: isActive ?? this.isActive,
         picture: picture,
-        //     addedBy: staff ?? addedBy,
+        addedBy: staff ?? addedBy,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is RenterModel && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

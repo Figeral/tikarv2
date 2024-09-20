@@ -11,7 +11,7 @@ class AssetModel extends Equatable {
   final int surfaceArea;
   final int estimatedValue;
   final int? matricule;
-  final String? name;
+
   final String? address;
   final String? ville;
   final String? description;
@@ -19,7 +19,6 @@ class AssetModel extends Equatable {
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String? type;
 
   const AssetModel({
     required this.id,
@@ -30,7 +29,6 @@ class AssetModel extends Equatable {
     required this.surfaceArea,
     required this.estimatedValue,
     this.matricule,
-    this.name,
     this.address,
     this.ville,
     this.description,
@@ -38,7 +36,6 @@ class AssetModel extends Equatable {
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
-    this.type,
   });
 
   factory AssetModel.fromJson(Map<String, dynamic> json) {
@@ -52,12 +49,10 @@ class AssetModel extends Equatable {
       estimatedValue: json['estimatedValue'],
       numberOfFloors: json['numberOfFloors'],
       numberOfHalls: json['numberOfHalls'],
-      name: json['name'],
       address: json['address'],
       ville: json['ville'],
       description: json['description'],
       assetType: json['assetType'],
-      type: json['type'],
       isActive: json['active'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
@@ -74,12 +69,10 @@ class AssetModel extends Equatable {
       'estimatedValue': estimatedValue,
       'numberOfFloors': numberOfFloors,
       'numberOfHalls': numberOfHalls,
-      'name': name,
       'address': address,
       'ville': ville,
       'description': description,
       'assetType': assetType,
-      'type': type,
       'active': isActive,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -102,7 +95,6 @@ class AssetModel extends Equatable {
       surfaceArea,
       estimatedValue,
       matricule,
-      name,
       address,
       ville,
       description,
@@ -110,7 +102,6 @@ class AssetModel extends Equatable {
       isActive,
       createdAt,
       updatedAt,
-      type,
     ];
   }
 
@@ -126,7 +117,6 @@ class AssetModel extends Equatable {
     int? surfaceArea,
     int? estimatedValue,
     int? matricule,
-    String? name,
     String? address,
     String? ville,
     String? description,
@@ -134,7 +124,6 @@ class AssetModel extends Equatable {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-    String? type,
   }) {
     return AssetModel(
       id: id ?? this.id,
@@ -145,7 +134,6 @@ class AssetModel extends Equatable {
       surfaceArea: surfaceArea ?? this.surfaceArea,
       estimatedValue: estimatedValue ?? this.estimatedValue,
       matricule: matricule ?? this.matricule,
-      name: name ?? this.name,
       address: address ?? this.address,
       ville: ville ?? this.ville,
       description: description ?? this.description,
@@ -153,7 +141,6 @@ class AssetModel extends Equatable {
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      type: type ?? this.type,
     );
   }
 }

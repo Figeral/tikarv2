@@ -6,6 +6,7 @@ class LessorModel extends Equatable {
   final String fname, lname, gender;
   final int tel;
   final bool isActive;
+  final StaffModel? addedBy;
   final bool inCameroon;
 
   final DateTime createdAt;
@@ -17,6 +18,7 @@ class LessorModel extends Equatable {
     required this.gender,
     required this.tel,
     this.isActive = true,
+    this.addedBy,
     required this.inCameroon,
     required this.createdAt,
     required this.updatedAt,
@@ -24,16 +26,16 @@ class LessorModel extends Equatable {
 
   factory LessorModel.fromJson(Map<String, dynamic> json) {
     return LessorModel(
-      id: json['id'] as int?,
-      fname: json['fname'] as String,
-      lname: json['lname'] as String,
-      gender: json['gender'] as String,
-      tel: json['tel'] as int,
-      isActive: json['isActive'] as bool? ?? true,
-      inCameroon: json['inCameroon'] as bool,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-    );
+        id: json['id'] as int?,
+        fname: json['fname'] as String,
+        lname: json['lname'] as String,
+        gender: json['gender'] as String,
+        tel: json['tel'] as int,
+        isActive: json['isActive'] as bool? ?? true,
+        inCameroon: json['inCameroon'] as bool,
+        createdAt: DateTime.parse(json['createdAt']),
+        updatedAt: DateTime.parse(json['updatedAt']),
+        addedBy: StaffModel.fromJson(json['addedStaff']));
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +47,7 @@ class LessorModel extends Equatable {
       'tel': tel,
       'isActive': isActive,
       'inCameroon': inCameroon,
+      "addedStaff": addedBy?.toJson(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -58,6 +61,7 @@ class LessorModel extends Equatable {
       'tel': tel,
       'isActive': isActive,
       'inCameroon': inCameroon,
+      "addedStaff": addedBy?.toJson(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -65,7 +69,7 @@ class LessorModel extends Equatable {
 
   @override
   List<Object?> get props =>
-      [id, fname, lname, gender, tel, isActive, inCameroon];
+      [id, fname, lname, gender, tel, isActive, inCameroon, addedBy];
   LessorModel copyWith(
           {String? fname,
           String? lname,
@@ -82,6 +86,7 @@ class LessorModel extends Equatable {
         gender: gender ?? this.gender,
         tel: tel ?? this.tel,
         inCameroon: inCameroon ?? this.inCameroon,
+        addedBy: addedby ?? addedBy,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );

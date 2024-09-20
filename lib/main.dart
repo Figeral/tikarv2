@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tikar/cubits/rent_cubit.dart';
 import 'package:tikar/cubits/user_cubit.dart';
+import 'package:tikar/cubits/asset_cubit.dart';
 import 'package:tikar/cubits/staff_cubit.dart';
 import 'package:tikar/cubits/renter_cubit.dart';
 import 'package:tikar/cubits/lessor_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tikar/cubits/basement__cubit.dart';
 import 'package:tikar/views/phone/home_phone.dart';
 import 'package:tikar/views/desktop/home_desktop.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<LessorCubit>(create: (_) => LessorCubit()),
         BlocProvider<RenterCubit>(create: (_) => RenterCubit()),
         BlocProvider<RentCubit>(create: (_) => RentCubit()),
+        BlocProvider<AssetCubit>(create: (_) => AssetCubit()),
+        BlocProvider<BasementCubit>(create: (_) => BasementCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
