@@ -5,6 +5,7 @@ import 'package:tikar/cubits/rent_cubit.dart';
 import 'package:tikar/cubits/user_cubit.dart';
 import 'package:tikar/cubits/asset_cubit.dart';
 import 'package:tikar/cubits/staff_cubit.dart';
+import 'package:tikar/cubits/screen_cubit.dart';
 import 'package:tikar/cubits/renter_cubit.dart';
 import 'package:tikar/cubits/lessor_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<RentCubit>(create: (_) => RentCubit()),
         BlocProvider<AssetCubit>(create: (_) => AssetCubit()),
         BlocProvider<BasementCubit>(create: (_) => BasementCubit()),
+        BlocProvider<ScreenCubit>(create: (_) => ScreenCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
