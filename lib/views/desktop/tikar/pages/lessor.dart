@@ -2,13 +2,15 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
+import 'package:tikar/cubits/base_state.dart';
 import 'package:tikar/utils/icons_utile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tikar/cubits/lessor_cubit.dart';
 import 'package:tikar/models/lessor_model.dart';
-import 'package:tikar/viewmodels/lessor_vm.dart';
 import 'package:tikar/extensions/extensions.dart';
 import 'package:tikar/utils/form/lessor_form.dart';
+import 'package:tikar/utils/widgets/App_loader.dart';
 import 'package:tikar/utils/tables/lessor_table.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
 
@@ -40,78 +42,45 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
-
     super.dispose();
   }
 
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final _cubit = BlocProvider.of<LessorCubit>(context);
-    _cubit.fetch();
+    return BlocConsumer<LessorCubit, BaseState<List<LessorModel?>?>>(
+      listener: (context, state) {
+        if (state is Valid) {
+          context.read<LessorCubit>().fetch();
+        }
+      },
+      listenWhen: (previous, current) {
+        return current is Loading ||
+            current is Initial ||
+            current is Error ||
+            current is Valid;
+      },
+      builder: (BuildContext context, state) {
+        bool _isLoading = state is Loading || state is Initial;
+        return Skeletonizer(
+          enabled: _isLoading,
+          child: switch (state) {
+            Initial() || Loading() => Builder(builder: (_) {
+                context.read<LessorCubit>().getData();
+                return AppLoader.adaptative();
+              }),
+            Success() => body(context, state.data),
+            NotFound() => AppLoader.customLoader("Nothing found , downloading"),
+            _ => Container(),
+          },
+        );
+      },
+    );
+  }
+
+  Widget body(BuildContext context, List<LessorModel?>? _cubit) {
     return Scaffold(
       floatingActionButton: defaultAnimatedFAB(),
-      appBar: AppBar(
-        title: const Row(
-          children: [
-            Text(
-              'Actifs',
-              style: TextStyle(color: AppColors.grey),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 3, right: 3),
-              child: Text('/'),
-            ),
-            Text('Lessor'),
-          ],
-        ),
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
-      ),
-      endDrawer: Drawer(
-        shape: Border.all(width: 1),
-        width: context.width * 0.35,
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text('Drawer Header'),
-            ),
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-          ],
-        ),
-      ),
-      // floatingActionButton: AnimatedLessorFAB(
-      //   onToggle: toggle,
-      // ),
       body: SizedBox(
         width: context.width,
         height: context.height,
@@ -122,27 +91,22 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Center(
-                      child: FutureBuilder(
-                          future: _cubit.getData(),
-                          builder: (_, snapshot) {
-                            if (_cubit.state != null) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  //  cardHeader(_cubit.state!),
-                                  SizedBox(
-                                    height: 60,
-                                  ),
-                                  Container(
-                                      width: context.width * 0.6,
-                                      height: context.width * 0.6,
-                                      child: LessorPaginatedSortableTable(
-                                          data: [])),
-                                ],
-                              );
-                            }
-                            return Container();
-                          }))
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      customAppBar(context),
+                      cardHeader(_cubit!),
+                      Container(
+                          width: context.width * 0.6,
+                          height: context.width * 0.6,
+                          child: LessorPaginatedSortableTable(
+                            data: _cubit,
+                            // onTap: (LessorModel model) {
+                            //   print(model);
+                            // },
+                          ))
+                    ],
+                  ))
                 ],
               ),
               Visibility(
@@ -152,13 +116,64 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
                   child: Container(
                     width: context.width,
                     height: context.height + context.height / 2,
-                    color: const Color.fromARGB(60, 12, 12, 12),
+                    color: const Color.fromARGB(100, 12, 12, 12),
                   ),
                 ),
               )
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  SizedBox customAppBar(BuildContext context) {
+    return SizedBox(
+      width: context.width,
+      height: 60,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 50,
+          ),
+          const Text(
+            'Actifs',
+            style: TextStyle(
+                color: AppColors.grey,
+                fontSize: 22,
+                fontWeight: FontWeight.bold),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 3, right: 3),
+            child: Text('/'),
+          ),
+          const Text(
+            'Lessor',
+            style: TextStyle(
+                color: AppColors.blue,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            width: 30,
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 5),
+                child: IconButton(
+                    onPressed: () {}, icon: const Icon(Icons.settings)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 10),
+                child: IconButton(
+                    onPressed: context.read<LessorCubit>().fetch,
+                    icon: const Icon(Icons.replay)),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
@@ -181,8 +196,11 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
         CardUtile(
             name: AppStrings.lessors_state[0],
             value: 0,
-            icon: Icons.manage_accounts_outlined),
-        CardUtile(name: AppStrings.lessors_state[1], value: 1, icon: Icons.man),
+            otherIcon: "assets/images/tenant.svg"),
+        CardUtile(
+            name: AppStrings.lessors_state[1],
+            value: 1,
+            otherIcon: "assets/images/total-tenant.svg"),
         CardUtile(
           name: AppStrings.lessors_state[2],
           value: 2,
@@ -191,7 +209,7 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
         CardUtile(
             name: AppStrings.lessors_state[3],
             value: 3,
-            icon: Icons.rocket_launch_outlined)
+            otherIcon: "assets/images/enterprise.svg")
       ],
     );
   }
@@ -243,7 +261,7 @@ class _LessorState extends State<Lessor> with SingleTickerProviderStateMixin {
                   duration: const Duration(milliseconds: 100),
                   child: FloatingActionButton(
                     backgroundColor: AppColors.golden,
-                    tooltip: "add staff",
+                    tooltip: "add lessor",
                     onPressed: toggle,
                     child: dividor != 0
                         ? Transform.rotate(

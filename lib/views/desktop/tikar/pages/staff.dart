@@ -2,15 +2,17 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
+import 'package:tikar/cubits/base_state.dart';
 import 'package:tikar/utils/icons_utile.dart';
-import 'package:tikar/models/staff_model.dart';
 import 'package:tikar/cubits/staff_cubit.dart';
+import 'package:tikar/models/staff_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tikar/utils/form/staff_form.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tikar/extensions/extensions.dart';
+import 'package:tikar/utils/form/staff_form.dart';
+import 'package:tikar/utils/widgets/App_loader.dart';
 import 'package:tikar/utils/tables/staff_table.dart';
 import 'package:tikar/utils/widgets/custom_cart_header.dart';
-import 'package:tikar/utils/widgets/paginated_data_table.dart';
 
 class Staff extends StatefulWidget {
   const Staff({super.key});
@@ -22,18 +24,12 @@ class Staff extends StatefulWidget {
 class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
   bool _isVisible = false;
   late AnimationController _controller;
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 100));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-
-    super.dispose();
   }
 
   void toggle() {
@@ -43,39 +39,47 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
     });
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final sHeight = MediaQuery.of(context).size.height;
-    final sWidth = MediaQuery.of(context).size.width;
-    final _cubit = BlocProvider.of<StaffCubit>(context);
-    _cubit.fetch();
-    return Scaffold(
-      appBar: AppBar(
-        title: const Row(
-          children: [
-            Text(
-              'Actifs',
-              style: TextStyle(color: AppColors.grey),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 3, right: 3),
-              child: Text('/'),
-            ),
-            Text('Staff'),
-          ],
-        ),
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
+    return BlocConsumer<StaffCubit, BaseState<List<StaffModel?>?>>(
+      listener: (context, state) {
+        if (state is Valid) {
+          context.read<StaffCubit>().fetch();
+        }
+      },
+      listenWhen: (previous, current) {
+        return current is Loading ||
+            current is Initial ||
+            current is Error ||
+            current is Valid;
+      },
+      builder: (BuildContext context, state) {
+        bool _isLoading = state is Loading || state is Initial;
+        return Skeletonizer(
+          enabled: _isLoading,
+          child: switch (state) {
+            Initial() || Loading() => Builder(builder: (_) {
+                context.read<StaffCubit>().getData();
+                return AppLoader.adaptative();
+              }),
+            Success() => body(context, state.data),
+            NotFound() => AppLoader.customLoader("Nothing found , downloading"),
+            _ => Container(),
           },
-        ),
-      ),
+        );
+      },
+    );
+  }
+
+  Widget body(BuildContext context, List<StaffModel?>? _cubit) {
+    return Scaffold(
       floatingActionButton: defaultAnimatedFAB(),
       body: SizedBox(
         width: context.width,
@@ -83,34 +87,35 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              Center(
-                  child: FutureBuilder(
-                      future: _cubit.getData(),
-                      builder: (_, snapshot) {
-                        if (_cubit.state != null) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // CartHeader(_cubit.state!),
-                              SizedBox(
-                                height: 60,
-                              ),
-                              Container(
-                                  width: context.width * 0.6,
-                                  height: context.width * 0.6,
-                                  child: StaffPaginatedSortableTable(data: [])),
-                            ],
-                          );
-                        }
-                        return Container();
-                      })),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      customAppBar(context),
+                      CartHeader(_cubit!),
+                      Container(
+                          width: context.width * 0.6,
+                          height: context.width * 0.6,
+                          child: StaffPaginatedSortableTable(
+                            data: _cubit,
+                            // onTap: (StaffModel model) {
+                            //   print(model);
+                            // },
+                          ))
+                    ],
+                  ))
+                ],
+              ),
               Visibility(
                 visible: _isVisible,
                 child: GestureDetector(
                   onTap: toggle,
                   child: Container(
-                    width: sWidth,
-                    height: sHeight + sHeight / 2,
+                    width: context.width,
+                    height: context.height + context.height / 2,
                     color: const Color.fromARGB(100, 12, 12, 12),
                   ),
                 ),
@@ -118,6 +123,57 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  SizedBox customAppBar(BuildContext context) {
+    return SizedBox(
+      width: context.width,
+      height: 60,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 50,
+          ),
+          const Text(
+            'Actifs',
+            style: TextStyle(
+                color: AppColors.grey,
+                fontSize: 22,
+                fontWeight: FontWeight.bold),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 3, right: 3),
+            child: Text('/'),
+          ),
+          const Text(
+            'Staff',
+            style: TextStyle(
+                color: AppColors.blue,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            width: 30,
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 5),
+                child: IconButton(
+                    onPressed: () {}, icon: const Icon(Icons.settings)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 10),
+                child: IconButton(
+                    onPressed: context.read<StaffCubit>().fetch,
+                    icon: const Icon(Icons.replay)),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
