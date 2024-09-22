@@ -16,8 +16,7 @@ class RealEstate extends StatefulWidget {
   State<RealEstate> createState() => _RealEstateState();
 }
 
-class _RealEstateState extends State<RealEstate>
-    with SingleTickerProviderStateMixin {
+class _RealEstateState extends State<RealEstate> with TickerProviderStateMixin {
   List<DataItem> generateTestData() {
     final random = Random();
     final names = [
@@ -188,7 +187,7 @@ class _RealEstateState extends State<RealEstate>
                         offset: Offset(
                             dx * -_controller.value, dy * -_controller.value),
                         child: AssetForm(
-                          height: 400 * _controller.value,
+                          height: 800 * _controller.value,
                           width: 680 * _controller.value,
                         )),
                   )
@@ -205,7 +204,7 @@ class _RealEstateState extends State<RealEstate>
                   duration: const Duration(milliseconds: 100),
                   child: FloatingActionButton(
                     backgroundColor: AppColors.golden,
-                    tooltip: "add staff",
+                    tooltip: "add lessor",
                     onPressed: toggle,
                     child: dividor != 0
                         ? Transform.rotate(

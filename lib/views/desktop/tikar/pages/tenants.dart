@@ -23,7 +23,7 @@ class Tenant extends StatefulWidget {
   State<Tenant> createState() => _TenantState();
 }
 
-class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
+class _TenantState extends State<Tenant> with TickerProviderStateMixin {
   bool _isVisible = false;
   late AnimationController _controller;
   // late List<RenterModel> renters
@@ -68,19 +68,15 @@ class _TenantState extends State<Tenant> with SingleTickerProviderStateMixin {
             current is Valid;
       },
       builder: (BuildContext context, state) {
-        bool _isLoading = state is Loading || state is Initial;
-        return Skeletonizer(
-          enabled: _isLoading,
-          child: switch (state) {
-            Initial() || Loading() => Builder(builder: (_) {
-                context.read<RenterCubit>().getData();
-                return AppLoader.adaptative();
-              }),
-            Success() => body(context, state.data),
-            NotFound() => AppLoader.customLoader("Nothing found , downloading"),
-            _ => Container(),
-          },
-        );
+        return switch (state) {
+          Initial() || Loading() => Builder(builder: (_) {
+              context.read<RenterCubit>().getData();
+              return Skeletonizer(enabled: true, child: body(context, []));
+            }),
+          Success() => body(context, state.data),
+          NotFound() => body(context, []),
+          _ => Container(),
+        };
       },
     );
   }

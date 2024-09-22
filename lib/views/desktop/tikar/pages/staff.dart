@@ -21,7 +21,7 @@ class Staff extends StatefulWidget {
   State<Staff> createState() => _StaffState();
 }
 
-class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
+class _StaffState extends State<Staff> with TickerProviderStateMixin {
   bool _isVisible = false;
   late AnimationController _controller;
 
@@ -61,19 +61,15 @@ class _StaffState extends State<Staff> with SingleTickerProviderStateMixin {
             current is Valid;
       },
       builder: (BuildContext context, state) {
-        bool _isLoading = state is Loading || state is Initial;
-        return Skeletonizer(
-          enabled: _isLoading,
-          child: switch (state) {
-            Initial() || Loading() => Builder(builder: (_) {
-                context.read<StaffCubit>().getData();
-                return AppLoader.adaptative();
-              }),
-            Success() => body(context, state.data),
-            NotFound() => AppLoader.customLoader("Nothing found , downloading"),
-            _ => Container(),
-          },
-        );
+        return switch (state) {
+          Initial() || Loading() => Builder(builder: (_) {
+              context.read<StaffCubit>().getData();
+              return Skeletonizer(enabled: true, child: body(context, []));
+            }),
+          Success() => body(context, state.data),
+          NotFound() => body(context, []),
+          _ => Container(),
+        };
       },
     );
   }

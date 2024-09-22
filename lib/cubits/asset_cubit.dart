@@ -61,6 +61,7 @@ class AssetCubit extends Cubit<BaseState<List<AssetModel?>?>>
       _assetVM.postData(data);
       emit(Valid());
     } catch (e) {
+      emit(Error("error occured"));
       if (e is FormatException) {
         emit(Error(e.message));
       } else if (e is HttpException) {
@@ -91,6 +92,7 @@ class AssetCubit extends Cubit<BaseState<List<AssetModel?>?>>
         emit(Success(e));
       } else {
         emit(NotFound());
+        fetch();
       }
     });
   }

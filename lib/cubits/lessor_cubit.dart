@@ -94,6 +94,7 @@ class LessorCubit extends Cubit<BaseState<List<LessorModel?>?>>
         emit(Success(e));
       } else {
         emit(NotFound());
+        fetch();
       }
     });
   }

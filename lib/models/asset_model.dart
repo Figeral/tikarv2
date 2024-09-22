@@ -3,49 +3,50 @@ import 'package:tikar/models/staff_model.dart';
 import 'package:tikar/models/lessor_model.dart';
 
 class AssetModel extends Equatable {
-  final int id;
-  final LessorModel? lessor;
-  final StaffModel addedBy;
+  final int? id;
+  final LessorModel lessor;
+  final StaffModel? addedBy;
   final int? numberOfFloors;
   final int? numberOfHalls;
   final int surfaceArea;
   final int estimatedValue;
-  final int? matricule;
+  final String? matricule;
 
   final String? address;
   final String? ville;
   final String? description;
-  final String assetType;
+  final String? assetType;
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final List<String>? image;
 
-  const AssetModel({
-    required this.id,
-    this.lessor,
-    required this.addedBy,
-    this.numberOfFloors,
-    this.numberOfHalls,
-    required this.surfaceArea,
-    required this.estimatedValue,
-    this.matricule,
-    this.address,
-    this.ville,
-    this.description,
-    required this.assetType,
-    required this.isActive,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+  AssetModel(
+      {this.id,
+      required this.lessor,
+      this.addedBy,
+      this.numberOfFloors,
+      this.numberOfHalls,
+      required this.surfaceArea,
+      required this.estimatedValue,
+      required this.matricule,
+      this.address,
+      this.ville,
+      this.description,
+      required this.assetType,
+      required this.isActive,
+      required this.createdAt,
+      required this.updatedAt,
+      this.image});
 
   factory AssetModel.fromJson(Map<String, dynamic> json) {
     return AssetModel(
       id: json['id'],
-      lessor:
-          json['lessor'] != null ? LessorModel.fromJson(json['lessor']) : null,
+      lessor: LessorModel.fromJson(json['lessor']),
       addedBy: StaffModel.fromJson(json['addedBy']),
       matricule: json['matricule'],
       surfaceArea: json['surfaceArea'],
+      image: json['image'],
       estimatedValue: json['estimatedValue'],
       numberOfFloors: json['numberOfFloors'],
       numberOfHalls: json['numberOfHalls'],
@@ -54,16 +55,17 @@ class AssetModel extends Equatable {
       description: json['description'],
       assetType: json['assetType'],
       isActive: json['active'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'lessor': lessor?.toJson(),
-      'addedBy': addedBy.toJson(),
+      'lessor': lessor.toJson(),
+      'addedBy': addedBy!
+          .toJson(), // since  this logic is already processed in the server
       'matricule': matricule,
       'surfaceArea': surfaceArea,
       'estimatedValue': estimatedValue,
@@ -73,16 +75,30 @@ class AssetModel extends Equatable {
       'ville': ville,
       'description': description,
       'assetType': assetType,
+      "image": image,
       'active': isActive,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   Map<String, dynamic> toJsonWithoutId() {
-    final json = toJson();
-    json.remove('id');
-    return json;
+    return {
+      'lessor': lessor.toJson(),
+      'matricule': matricule,
+      'surfaceArea': surfaceArea,
+      'estimatedValue': estimatedValue,
+      'numberOfFloors': numberOfFloors,
+      'numberOfHalls': numberOfHalls,
+      'address': address,
+      'ville': ville,
+      'description': description,
+      'assetType': assetType,
+      "image": image,
+      'active': isActive,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
+    };
   }
 
   List<Object?> toList() {
@@ -102,29 +118,30 @@ class AssetModel extends Equatable {
       isActive,
       createdAt,
       updatedAt,
+      image,
     ];
   }
 
   @override
   List<Object?> get props => toList();
 
-  AssetModel copyWith({
-    int? id,
-    LessorModel? lessor,
-    StaffModel? addedBy,
-    int? numberOfFloors,
-    int? numberOfHalls,
-    int? surfaceArea,
-    int? estimatedValue,
-    int? matricule,
-    String? address,
-    String? ville,
-    String? description,
-    String? assetType,
-    bool? isActive,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
+  AssetModel copyWith(
+      {int? id,
+      LessorModel? lessor,
+      StaffModel? addedBy,
+      int? numberOfFloors,
+      int? numberOfHalls,
+      int? surfaceArea,
+      int? estimatedValue,
+      String? matricule,
+      String? address,
+      String? ville,
+      String? description,
+      String? assetType,
+      bool? isActive,
+      DateTime? createdAt,
+      DateTime? updatedAt,
+      List<String>? image}) {
     return AssetModel(
       id: id ?? this.id,
       lessor: lessor ?? this.lessor,
@@ -136,6 +153,7 @@ class AssetModel extends Equatable {
       matricule: matricule ?? this.matricule,
       address: address ?? this.address,
       ville: ville ?? this.ville,
+      image: image ?? this.image,
       description: description ?? this.description,
       assetType: assetType ?? this.assetType,
       isActive: isActive ?? this.isActive,
@@ -156,19 +174,19 @@ class BasementModel extends Equatable {
   final int numberOfHalls;
   final String? type;
   final bool active;
-
-  const BasementModel({
-    required this.id,
-    required this.addedBy,
-    required this.building,
-    this.description,
-    required this.surfaceArea,
-    required this.estimatedValue,
-    this.assetType,
-    required this.numberOfHalls,
-    this.type,
-    required this.active,
-  });
+  List<String>? image;
+  BasementModel(
+      {required this.id,
+      required this.addedBy,
+      required this.building,
+      this.description,
+      required this.surfaceArea,
+      required this.estimatedValue,
+      this.assetType,
+      required this.numberOfHalls,
+      this.type,
+      required this.active,
+      this.image});
 
   factory BasementModel.fromJson(Map<String, dynamic> json) {
     return BasementModel(
@@ -177,6 +195,7 @@ class BasementModel extends Equatable {
       building: AssetModel.fromJson(json['building']),
       description: json['description'],
       surfaceArea: json['surfaceArea'],
+      image: json['image'],
       estimatedValue: json['estimatedValue'],
       assetType: json['assetType'],
       numberOfHalls: json['numberOfHalls'],
@@ -191,6 +210,7 @@ class BasementModel extends Equatable {
       'addedBy': addedBy.toJson(),
       'building': building.toJson(),
       'description': description,
+      "image": image,
       'surfaceArea': surfaceArea,
       'estimatedValue': estimatedValue,
       'assetType': assetType,
@@ -218,6 +238,7 @@ class BasementModel extends Equatable {
       numberOfHalls,
       type,
       active,
+      image
     ];
   }
 
@@ -233,6 +254,7 @@ class BasementModel extends Equatable {
     int? estimatedValue,
     String? assetType,
     int? numberOfHalls,
+    List<String>? image,
     String? type,
     bool? active,
   }) {
@@ -244,6 +266,7 @@ class BasementModel extends Equatable {
       surfaceArea: surfaceArea ?? this.surfaceArea,
       estimatedValue: estimatedValue ?? this.estimatedValue,
       assetType: assetType ?? this.assetType,
+      image: image ?? this.image,
       numberOfHalls: numberOfHalls ?? this.numberOfHalls,
       type: type ?? this.type,
       active: active ?? this.active,

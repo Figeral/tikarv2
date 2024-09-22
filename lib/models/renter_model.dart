@@ -26,10 +26,10 @@ class RenterModel extends Equatable {
   factory RenterModel.fromJson(Map<String, dynamic> json) {
     return RenterModel(
         createdAt: json['createdAt'] != null
-            ? DateTime.parse(json['createdAt'])
+            ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'])
             : DateTime.now(),
         updatedAt: json['updatedAt'] != null
-            ? DateTime.parse(json['updatedAt'])
+            ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt'])
             : DateTime.now(),
         id: json['id'] as int,
         gender: json['gender'] as String? ?? '',
@@ -48,11 +48,11 @@ class RenterModel extends Equatable {
       'lname': lname,
       'gender': gender,
       'tel': tel,
-      'isActive': isActive,
+      'active': isActive,
       "picture": picture,
       "addedStaff": addedBy?.toJson(),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
@@ -62,11 +62,11 @@ class RenterModel extends Equatable {
       'lname': lname,
       'gender': gender,
       'tel': tel,
-      'isActive': isActive,
+      'active': isActive,
       "picture": picture,
       "addedStaff": addedBy?.toJson(),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 

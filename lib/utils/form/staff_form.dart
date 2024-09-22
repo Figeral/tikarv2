@@ -282,7 +282,7 @@ class _StaffFormState extends State<StaffForm> {
                             cubit.post(StaffModel(
                                 fname: _textControllers[0].value.text,
                                 lname: _textControllers[1].value.text,
-                                pw: _textControllers[3].value.text,
+                                password: _textControllers[3].value.text,
                                 tel: int.parse(_textControllers[4].value.text),
                                 active: true,
                                 role: [_selectedRole!],

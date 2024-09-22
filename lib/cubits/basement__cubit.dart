@@ -93,6 +93,7 @@ class BasementCubit extends Cubit<BaseState<List<BasementModel?>?>>
         emit(Success(e));
       } else {
         emit(NotFound());
+        fetch();
       }
     });
   }

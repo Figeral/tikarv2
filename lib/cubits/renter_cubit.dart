@@ -95,7 +95,7 @@ class RenterCubit extends Cubit<BaseState<List<RenterModel?>?>>
       } else {
         emit(NotFound());
         fetch();
-        print("inside getUser");
+        //  print("inside getUser");
       }
     });
   }

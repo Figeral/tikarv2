@@ -102,14 +102,15 @@ class AssetVM extends BaseVM<AssetModel> {
     final header = await Endpoint.header;
 
     final response = await http.post(Uri.parse("${endpoint}asset"),
-        body: data.toJsonWithoutId(), headers: header);
+        body: jsonEncode(data.toJsonWithoutId()), headers: header);
+    print(jsonEncode(data.toJsonWithoutId()));
   }
 
   void postDataResidence(AssetModel data) async {
     final header = await Endpoint.header;
     try {
       final response = await http.post(Uri.parse("${endpoint}asset/residence"),
-          body: data.toJsonWithoutId(), headers: header);
+          body: jsonEncode(data.toJsonWithoutId()), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {

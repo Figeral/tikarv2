@@ -38,6 +38,7 @@ class UserVM {
       final response =
           await http.get(Uri.parse(Endpoint.info()), headers: header);
       if (response.statusCode == 200) {
+        print(jsonDecode(response.body));
         return StaffModel.fromJson(
             jsonDecode(response.body) as Map<String, dynamic>);
       } else {

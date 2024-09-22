@@ -36,8 +36,8 @@ class RentModel extends Equatable {
       basement: json['basement'] != null
           ? BasementModel.fromJson(json['basement'])
           : null,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
       renter: RenterModel.fromJson(json['renter']),
       active: json['active'],
       cost: json['cost'],
@@ -51,8 +51,8 @@ class RentModel extends Equatable {
       'endAt': endAt?.toIso8601String(),
       'asset': asset?.toJson(),
       'basement': basement?.toJson(),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
       'renter': renter.toJson(),
       'active': active,
       'cost': cost,

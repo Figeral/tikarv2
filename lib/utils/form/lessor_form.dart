@@ -23,7 +23,7 @@ class LessorForm extends StatefulWidget {
 
 class _LessorFormState extends State<LessorForm> {
   final _formKey = GlobalKey<FormState>();
-  String? _selectedJob;
+
   String? _selectedRole;
   bool _obscureText = true;
   final _textControllers = <TextEditingController>[

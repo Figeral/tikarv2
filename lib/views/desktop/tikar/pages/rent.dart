@@ -13,7 +13,7 @@ class Rent extends StatefulWidget {
   State<Rent> createState() => _RentState();
 }
 
-class _RentState extends State<Rent> with SingleTickerProviderStateMixin {
+class _RentState extends State<Rent> with TickerProviderStateMixin {
   bool _isVisible = false;
   late AnimationController _controller;
 

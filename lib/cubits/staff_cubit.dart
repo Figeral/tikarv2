@@ -94,6 +94,7 @@ class StaffCubit extends Cubit<BaseState<List<StaffModel?>?>>
         emit(Success(e));
       } else {
         emit(NotFound());
+        fetch();
       }
     });
   }

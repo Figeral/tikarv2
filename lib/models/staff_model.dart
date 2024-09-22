@@ -7,10 +7,10 @@ class StaffModel extends Equatable {
   final bool active;
   final String? picture;
   final List<String> role;
-  final List<Map<String, String>>? authorities;
+  final List<Map<String, dynamic>>? authorities;
   final String? post;
   final String email;
-  final String pw;
+  final String password;
   final String username;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -18,6 +18,7 @@ class StaffModel extends Equatable {
   final bool? enabled;
   final bool? accountNonLocked;
   final bool? credentialsNonExpired;
+
   const StaffModel({
     this.id,
     required this.fname,
@@ -25,7 +26,7 @@ class StaffModel extends Equatable {
     required this.tel,
     required this.active,
     this.picture,
-    required this.pw,
+    required this.password,
     required this.role,
     this.authorities,
     required this.post,
@@ -48,21 +49,22 @@ class StaffModel extends Equatable {
       active: json['active'],
       picture: json['picture'],
       role: List<String>.from(json['role']),
-      authorities: List<Map<String, String>>.from(
-        json['authorities'].map((x) => Map<String, String>.from(x)),
+      authorities: List<Map<String, dynamic>>.from(
+        json['authorities'].map((x) => {'authority': x['authority']}),
       ),
       post: json['post'],
       email: json['email'],
       username: json['username'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
       accountNonExpired: json['accountNonExpired'],
       enabled: json['enabled'],
       accountNonLocked: json['accountNonLocked'],
       credentialsNonExpired: json['credentialsNonExpired'],
-      pw: json["password"],
+      password: json["password"],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -76,13 +78,13 @@ class StaffModel extends Equatable {
       'post': post,
       'email': email,
       'username': username,
-      'createdAt': createdAt?.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
+      'createdAt': createdAt?.millisecondsSinceEpoch,
+      'updatedAt': updatedAt?.millisecondsSinceEpoch,
       'accountNonExpired': accountNonExpired,
       'enabled': enabled,
       'accountNonLocked': accountNonLocked,
       'credentialsNonExpired': credentialsNonExpired,
-      "password": pw,
+      "password": password,
     };
   }
 
@@ -94,7 +96,7 @@ class StaffModel extends Equatable {
       'active': active,
       'picture': picture,
       'role': role,
-      "password": pw,
+      "password": password,
       // 'authorities': authorities,
       'post': post,
       'email': email,
@@ -118,7 +120,7 @@ class StaffModel extends Equatable {
       picture,
       role,
       authorities,
-      pw,
+      password,
       post,
       email,
       username,
@@ -159,7 +161,7 @@ class StaffModel extends Equatable {
       lname: lname ?? this.lname,
       tel: tel ?? this.tel,
       active: active ?? this.active,
-      pw: pw ?? this.pw,
+      password: pw ?? this.password,
       picture: picture ?? this.picture,
       role: role ?? List.from(this.role),
       authorities: authorities ?? List.from(this.authorities!),
