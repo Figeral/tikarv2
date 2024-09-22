@@ -19,7 +19,7 @@ class AssetModel extends Equatable {
   final bool isActive;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<String>? image;
+  final List<String?>? image;
 
   AssetModel(
       {this.id,
@@ -46,7 +46,7 @@ class AssetModel extends Equatable {
       addedBy: StaffModel.fromJson(json['addedBy']),
       matricule: json['matricule'],
       surfaceArea: json['surfaceArea'],
-      image: json['image'],
+      image: List<String>.from(json['image']),
       estimatedValue: json['estimatedValue'],
       numberOfFloors: json['numberOfFloors'],
       numberOfHalls: json['numberOfHalls'],
@@ -141,7 +141,7 @@ class AssetModel extends Equatable {
       bool? isActive,
       DateTime? createdAt,
       DateTime? updatedAt,
-      List<String>? image}) {
+      List<String?>? image}) {
     return AssetModel(
       id: id ?? this.id,
       lessor: lessor ?? this.lessor,
@@ -174,7 +174,7 @@ class BasementModel extends Equatable {
   final int numberOfHalls;
   final String? type;
   final bool active;
-  List<String>? image;
+  List<String?>? image;
   BasementModel(
       {required this.id,
       required this.addedBy,
@@ -254,7 +254,7 @@ class BasementModel extends Equatable {
     int? estimatedValue,
     String? assetType,
     int? numberOfHalls,
-    List<String>? image,
+    List<String?>? image,
     String? type,
     bool? active,
   }) {

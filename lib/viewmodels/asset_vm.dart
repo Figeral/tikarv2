@@ -22,8 +22,10 @@ class AssetVM extends BaseVM<AssetModel> {
     final response =
         await http.get(Uri.parse("${endpoint}assets/parent"), headers: header);
     if (response.statusCode == 200) {
-      final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
-      return body.map((data) => AssetModel.fromJson(data)).toList();
+      final List<dynamic> body = jsonDecode(response.body);
+      return body
+          .map((data) => AssetModel.fromJson(data as Map<String, dynamic>))
+          .toList();
     } else {
       throw HttpException("HTTP ${response.statusCode}: ${response.body}",
           uri: Uri.parse("${endpoint}assets/parent"));
@@ -50,8 +52,10 @@ class AssetVM extends BaseVM<AssetModel> {
       final response = await http.get(Uri.parse("${endpoint}assets/residences"),
           headers: header);
       if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
-        return body.map((data) => AssetModel.fromJson(data)).toList();
+        final List<dynamic> body = jsonDecode(response.body);
+        return body
+            .map((data) => AssetModel.fromJson(data as Map<String, dynamic>))
+            .toList();
       } else {
         throw HttpException("HTTP ${response.statusCode}: ${response.body}",
             uri: Uri.parse("${endpoint}assets/residences"));

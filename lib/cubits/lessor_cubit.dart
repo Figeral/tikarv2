@@ -64,6 +64,7 @@ class LessorCubit extends Cubit<BaseState<List<LessorModel?>?>>
       _lessorVM.postData(data);
       emit(Valid());
     } catch (e) {
+      emit(Error("error occurred"));
       if (e is FormatException) {
         emit(Error(e.message));
       } else if (e is HttpException) {

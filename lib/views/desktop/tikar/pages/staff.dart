@@ -62,10 +62,11 @@ class _StaffState extends State<Staff> with TickerProviderStateMixin {
       },
       builder: (BuildContext context, state) {
         return switch (state) {
-          Initial() || Loading() => Builder(builder: (_) {
+          Initial() => Builder(builder: (_) {
               context.read<StaffCubit>().getData();
               return Skeletonizer(enabled: true, child: body(context, []));
             }),
+          Loading() => Skeletonizer(enabled: true, child: body(context, [])),
           Success() => body(context, state.data),
           NotFound() => body(context, []),
           _ => Container(),

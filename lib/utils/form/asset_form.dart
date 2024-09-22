@@ -369,26 +369,76 @@ class _AssetFormState extends State<AssetForm> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              List<String> images = [];
-                              _file.forEach((file) async {
-                                images.add(await _uploadController
-                                    .uploadImages(file!));
-                              });
-                              context.read<AssetCubit>().post(AssetModel(
-                                  image: images,
-                                  ville: _selectedTown,
-                                  address: _textControllers[1].value.text,
-                                  surfaceArea:
-                                      int.parse(_textControllers[2].value.text),
-                                  estimatedValue:
-                                      int.parse(_textControllers[3].value.text),
-                                  description: _textControllers[4].value.text,
-                                  assetType: _selectedAsset,
-                                  isActive: true,
-                                  createdAt: DateTime.now(),
-                                  updatedAt: DateTime.now(),
-                                  lessor: _selectedLessor!,
-                                  matricule: _textControllers[0].value.text));
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Center(
+                                      child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "sauvegarde de image en cours",
+                                        style: TextStyle(
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      const CircularProgressIndicator(),
+                                    ],
+                                  ));
+                                },
+                              );
+
+                              try {
+                                List<String> images = [];
+                                for (var file in _file) {
+                                  if (file != null) {
+                                    String uploadedImageUrl =
+                                        await _uploadController
+                                            .uploadImages(file);
+                                    images.add(uploadedImageUrl);
+                                  }
+                                }
+
+                                AssetModel newAsset = AssetModel(
+                                    image: images,
+                                    ville: _selectedTown,
+                                    address: _textControllers[1].value.text,
+                                    surfaceArea: int.parse(
+                                        _textControllers[2].value.text),
+                                    estimatedValue: int.parse(
+                                        _textControllers[3].value.text),
+                                    description: _textControllers[4].value.text,
+                                    assetType: _selectedAsset,
+                                    isActive: true,
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                    lessor: _selectedLessor!,
+                                    matricule: _textControllers[0].value.text);
+
+                                context.read<AssetCubit>().post(newAsset);
+
+                                Navigator.of(context).pop();
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Asset created successfully')),
+                                );
+                              } catch (e) {
+                                // Hide loading indicator
+                                Navigator.of(context).pop();
+
+                                // // Show error message
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Error creating asset: ${e.toString()}')),
+                                );
+                              }
                             }
                           },
                           child: Text(
