@@ -8,200 +8,163 @@ import 'package:tikar/utils/local_cache_manager.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DesktopBoarding extends StatefulWidget {
-  const DesktopBoarding({super.key});
+  const DesktopBoarding({Key? key}) : super(key: key);
 
   @override
   State<DesktopBoarding> createState() => _DesktopBoardingState();
 }
 
 class _DesktopBoardingState extends State<DesktopBoarding> {
-  int _currentpage = 0;
+  int _currentPage = 0;
   final _pageController = PageController();
-  bool leftTap = false;
-  bool rightTap = true;
+
   @override
   Widget build(BuildContext context) {
-    final sWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: Colors.purple.shade700,
-      body: Stack(
-        children: [
-          PageView(
-            onPageChanged: (value) => setState(() => _currentpage = value),
-            controller: _pageController,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
             children: [
-              landingPages(AppImage.onboard1, AppStrings.boarding1[0],
-                  AppStrings.boarding1[1]),
-              landingPages(AppImage.onboard2, AppStrings.boarding2[0],
-                  AppStrings.boarding2[1]),
-              landingPages(AppImage.onboard3, AppStrings.boarding3[0],
-                  AppStrings.boarding3[1],
-                  button: button(context, sWidth))
-            ],
-          ),
-          Container(
-            alignment: const Alignment(0, 0.80),
-            child: SmoothPageIndicator(
-              controller: _pageController, count: 3,
-              onDotClicked: (int toPageIndex) {
-                if (toPageIndex.toInt() == 1) {
-                  _pageController.nextPage(
+              PageView(
+                onPageChanged: (value) => setState(() => _currentPage = value),
+                controller: _pageController,
+                children: [
+                  landingPage(constraints, AppImage.onboard1,
+                      AppStrings.boarding1[0], AppStrings.boarding1[1]),
+                  landingPage(constraints, AppImage.onboard2,
+                      AppStrings.boarding2[0], AppStrings.boarding2[1]),
+                  landingPage(constraints, AppImage.onboard3,
+                      AppStrings.boarding3[0], AppStrings.boarding3[1],
+                      button: button(context, constraints)),
+                ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(bottom: constraints.maxHeight * 0.05),
+                  child: SmoothPageIndicator(
+                    controller: _pageController,
+                    count: 3,
+                    onDotClicked: (index) => _pageController.animateToPage(
+                      index,
                       duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeIn);
-                } else {
-                  _pageController.previousPage(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeIn);
-                }
-              },
-              // axisDirection:,
-            ),
-          ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Visibility(
-                      visible: _currentpage > 0 ? true : false,
-                      child: Container(
-                        alignment: const Alignment(-1, -0.0),
-                        child: IconButton(
-                            iconSize: 200,
-                            onPressed: () {
-                              setState(() {
-                                _pageController.previousPage(
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeIn);
-                                // leftTap = false;
-                                // rightTap = true;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.keyboard_double_arrow_left_outlined,
-                              color: Colors.black38,
-                            )),
-                      ),
+                      curve: Curves.easeInOut,
                     ),
-                    SizedBox(width: sWidth * 0.75),
-                    Visibility(
-                      visible: _currentpage < 2 ? true : false,
-                      child: Container(
-                        alignment: const Alignment(1, -0.0),
-                        child: IconButton(
-                          iconSize: 200,
-                          onPressed: () {
-                            setState(() {
-                              _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeIn);
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.keyboard_double_arrow_right,
-                            color: Colors.black38,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+              if (_currentPage > 0)
+                Positioned(
+                  left: 20,
+                  top: constraints.maxHeight / 2,
+                  child: IconButton(
+                    icon: const Icon(Icons.chevron_left, color: Colors.white),
+                    iconSize: 48,
+                    onPressed: () => _pageController.previousPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    ),
+                  ),
+                ),
+              if (_currentPage < 2)
+                Positioned(
+                  right: 20,
+                  top: constraints.maxHeight / 2,
+                  child: IconButton(
+                    icon: const Icon(Icons.chevron_right, color: Colors.white),
+                    iconSize: 48,
+                    onPressed: () => _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
-}
 
-ElevatedButton button(BuildContext context, double sWidth) {
-  return ElevatedButton(
-    onPressed: () {
-      LocalCacheManager.setFlag(name: "onboarding_finished", value: true);
-      AppNavigator.push(context, destination: const Auth());
-    },
-    style: ElevatedButton.styleFrom(
-      backgroundColor: AppColors.blue,
-      minimumSize: Size(
-        sWidth * 0.25,
-        60.0,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-    ),
-    child: const Text(
-      'Commencer',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-        fontSize: 20,
-      ),
-    ),
-  );
-}
+  Widget landingPage(
+      BoxConstraints constraints, String asset, String title, String text,
+      {Widget? button}) {
+    double contentWidth = constraints.maxWidth * 0.8;
+    double imageSize = constraints.maxHeight * 0.4;
 
-Widget landingPages(String asset, String title, String text,
-    {ElevatedButton? button, double? width}) {
-  return Container(
-    color: Colors.white,
-    child: Column(
-      children: [
-        Container(
-          alignment: const Alignment(0, -1),
-          child: const SizedBox(
-            height: 290,
-            width: 400,
-            child: Image(
-              image: AssetImage(AppImage.tikar),
-            ),
-          ),
-        ),
-        Container(
-          alignment: const Alignment(0, -0.0),
-          child: SizedBox(
-            height: 400,
-            width: 400,
-            child: Image(
-              image: AssetImage(asset),
-            ),
-          ),
-        ),
-        Container(
-          alignment: const Alignment(0, 0.5),
+    return Container(
+      color: Colors.white,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.1),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: constraints.maxHeight * 0.05),
+              SizedBox(
+                height: imageSize * 0.5,
+                child: Image.asset(AppImage.tikar, fit: BoxFit.contain),
+              ),
+              SizedBox(
+                height: imageSize,
+                child: Image.asset(asset, fit: BoxFit.contain),
+              ),
+              SizedBox(height: constraints.maxHeight * 0.05),
               Text(
                 title,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.black,
-                    fontSize: 24),
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                  fontSize: constraints.maxWidth * 0.02,
+                ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: constraints.maxHeight * 0.02),
               Text(
                 text,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey,
-                    fontSize: 19),
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey,
+                  fontSize: constraints.maxWidth * 0.015,
+                ),
                 textAlign: TextAlign.center,
               ),
+              SizedBox(height: constraints.maxHeight * 0.05),
+              if (button != null) button,
+              SizedBox(height: constraints.maxHeight * 0.05),
             ],
           ),
         ),
-        const SizedBox(
-          height: 30,
+      ),
+    );
+  }
+
+  Widget button(BuildContext context, BoxConstraints constraints) {
+    return ElevatedButton(
+      onPressed: () {
+        LocalCacheManager.setFlag(name: "onboarding_finished", value: true);
+        AppNavigator.push(context, destination: const Auth());
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.blue,
+        minimumSize: Size(
+          constraints.maxWidth * 0.2,
+          constraints.maxHeight * 0.06,
         ),
-        button ?? const SizedBox(),
-      ],
-    ),
-  );
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      child: Text(
+        'Commencer',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontSize: constraints.maxWidth * 0.015,
+        ),
+      ),
+    );
+  }
 }
