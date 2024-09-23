@@ -34,9 +34,11 @@ class RentVM extends BaseVM<RentModel> {
       final response =
           await http.get(Uri.parse("${endpoint}rents"), headers: header);
       if (response.statusCode == 200) {
-        final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
+        final List<dynamic> body = jsonDecode(response.body);
 
-        return body.map((data) => RentModel.fromJson(data)).toList();
+        return body
+            .map((data) => RentModel.fromJson(data as Map<String, dynamic>))
+            .toList();
       } else {
         throw HttpException("HTTP ${response.statusCode}: ${response.body}",
             uri: Uri.parse("${endpoint}rents"));
@@ -87,7 +89,7 @@ class RentVM extends BaseVM<RentModel> {
     final header = await Endpoint.header;
     try {
       final response = await http.post(Uri.parse("${endpoint}rent"),
-          body: data.toJsonWithoutId(), headers: header);
+          body: jsonEncode(data.toJsonWithoutId()), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {
@@ -107,7 +109,7 @@ class RentVM extends BaseVM<RentModel> {
     final header = await Endpoint.header;
     try {
       final response = await http.post(Uri.parse("${endpoint}rent"),
-          body: data.toJson(), headers: header);
+          body: jsonEncode(data.toJson()), headers: header);
     } catch (e) {
       print("Exception caught: $e");
       if (e is FormatException) {

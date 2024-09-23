@@ -1,27 +1,28 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
+import 'package:tikar/models/rent_model.dart';
 import 'package:tikar/models/asset_model.dart';
 import 'package:tikar/models/staff_model.dart';
 import 'package:tikar/models/lessor_model.dart';
 import 'package:tikar/extensions/extensions.dart';
 
-class AssetPaginatedSortableTable extends StatefulWidget {
-  final List<AssetModel?> data;
+class RentPaginatedSortableTable extends StatefulWidget {
+  final List<RentModel?> data;
 
-  const AssetPaginatedSortableTable({super.key, required this.data});
+  const RentPaginatedSortableTable({super.key, required this.data});
 
   @override
-  _AssetPaginatedSortableTableState createState() =>
-      _AssetPaginatedSortableTableState();
+  _RentPaginatedSortableTableState createState() =>
+      _RentPaginatedSortableTableState();
 }
 
-class _AssetPaginatedSortableTableState
-    extends State<AssetPaginatedSortableTable> {
+class _RentPaginatedSortableTableState
+    extends State<RentPaginatedSortableTable> {
   int _rowsPerPage = 10;
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
-  late List<AssetModel> _sortedData;
+  late List<RentModel> _sortedData;
   int _currentPage = 0;
   String _searchQuery = '';
   bool _showActiveOnly = false;
@@ -37,26 +38,29 @@ class _AssetPaginatedSortableTableState
   void _sortData() {
     _sortedData.sort((a, b) {
       switch (_sortColumnIndex) {
-        case 0:
-          return _sortAscending
-              ? a.matricule!.compareTo(b.matricule!)
-              : b.matricule!.compareTo(a.matricule!);
+        // case 0:
+        //   return _sortAscending
+        //       ? a.asset!.matricule!.compareTo(a.asset!.matricule!)
+        //       : a.asset!.matricule!.compareTo(a.asset!.matricule!) ??
+
+        //           ? a.asset!.matricule!.compareTo(a.asset!.matricule!)
+        //           : a.asset!.matricule!.compareTo(a.asset!.matricule!);
         case 1:
           return _sortAscending
-              ? a.assetType!.compareTo(b.assetType!)
-              : b.assetType!.compareTo(a.assetType!);
+              ? a.renter.fname.compareTo(b.renter.fname)
+              : b.renter.fname.compareTo(a.renter.fname);
         case 2:
           return _sortAscending
-              ? a.lessor!.fname.compareTo(b.lessor!.fname)
-              : b.lessor!.fname.compareTo(a.lessor!.fname);
+              ? a.cost.compareTo(b.cost)
+              : b.cost.compareTo(a.cost);
         case 3:
           return _sortAscending
-              ? a.addedBy!.fname.compareTo(b.addedBy!.fname)
-              : b.addedBy!.fname.compareTo(a.addedBy!.fname);
+              ? a.startAt.toString().compareTo(b.startAt.toString())
+              : b.startAt.toString().compareTo(a.startAt.toString());
         case 4:
           return _sortAscending
-              ? a.ville.toString().compareTo(b.ville.toString())
-              : b.ville.toString().compareTo(a.ville.toString());
+              ? a.endAt.toString().compareTo(b.endAt.toString())
+              : b.endAt.toString().compareTo(a.endAt.toString());
         default:
           return 0;
       }
@@ -70,18 +74,23 @@ class _AssetPaginatedSortableTableState
 
           final lowercaseQuery = _searchQuery.toLowerCase();
 
-          bool matchesSearch = item.matricule!
-                  .toLowerCase()
-                  .contains(lowercaseQuery) ||
-              item.assetType!.toLowerCase().contains(lowercaseQuery) ||
-              (item.addedBy!.fname.toLowerCase().contains(lowercaseQuery)) ||
-              item.ville!.toLowerCase().contains(lowercaseQuery);
+          bool matchesSearch =
+              item.asset!.matricule!.toLowerCase().contains(lowercaseQuery) ||
+                  item.basement!.matricule!
+                      .toLowerCase()
+                      .contains(lowercaseQuery) ||
+                  item.renter.fname.toLowerCase().contains(lowercaseQuery) ||
+                  (item.startAt
+                      .toString()
+                      .toLowerCase()
+                      .contains(lowercaseQuery)) ||
+                  item.endAt.toString().toLowerCase().contains(lowercaseQuery);
 
-          bool matchesActiveFilter = !_showActiveOnly || item.isActive!;
+          bool matchesActiveFilter = !_showActiveOnly || item.active;
 
           return matchesSearch && matchesActiveFilter;
         })
-        .whereType<AssetModel>()
+        .whereType<RentModel>()
         .toList();
 
     _sortData();
@@ -93,7 +102,7 @@ class _AssetPaginatedSortableTableState
     int totalPages = (_sortedData.length / _rowsPerPage).ceil();
     int startIndex = _currentPage * _rowsPerPage;
     int endIndex = (startIndex + _rowsPerPage).clamp(0, _sortedData.length);
-    List<AssetModel> pageData = _sortedData.sublist(startIndex, endIndex);
+    List<RentModel> pageData = _sortedData.sublist(startIndex, endIndex);
 
     return Column(
       children: [
@@ -148,7 +157,7 @@ class _AssetPaginatedSortableTableState
               ),
               columns: [
                 DataColumn(
-                  label: const Text('Matricule'),
+                  label: const Text('Biens'),
                   onSort: (columnIndex, ascending) {
                     setState(() {
                       _sortColumnIndex = columnIndex;
@@ -158,7 +167,7 @@ class _AssetPaginatedSortableTableState
                   },
                 ),
                 DataColumn(
-                  label: const Text('Type'),
+                  label: const Text('Locataires'),
                   // numeric: true,
                   onSort: (columnIndex, ascending) {
                     setState(() {
@@ -169,7 +178,7 @@ class _AssetPaginatedSortableTableState
                   },
                 ),
                 DataColumn(
-                  label: const Text('Propriétaire/Bailleur'),
+                  label: const Text('Prix / mois'),
                   onSort: (columnIndex, ascending) {
                     setState(() {
                       _sortColumnIndex = columnIndex;
@@ -179,7 +188,7 @@ class _AssetPaginatedSortableTableState
                   },
                 ),
                 DataColumn(
-                  label: const Text('Ajouter Par'),
+                  label: const Text('Debut'),
                   onSort: (columnIndex, ascending) {
                     setState(() {
                       _sortColumnIndex = columnIndex;
@@ -189,7 +198,7 @@ class _AssetPaginatedSortableTableState
                   },
                 ),
                 DataColumn(
-                  label: const Text('Address'),
+                  label: const Text('Fin'),
                   onSort: (columnIndex, ascending) {
                     setState(() {
                       _sortColumnIndex = columnIndex;
@@ -249,7 +258,7 @@ class _AssetPaginatedSortableTableState
 }
 
 class _DataSource extends DataTableSource {
-  final List<AssetModel> _data;
+  final List<RentModel> _data;
   final Function(int?) onHover;
   final int? hoveredIndex;
 
@@ -259,7 +268,7 @@ class _DataSource extends DataTableSource {
   DataRow getRow(int index) {
     final item = _data[index];
     return DataRow(
-      onSelectChanged: (value) => print(item.matricule),
+      onSelectChanged: (value) => () {},
       color: WidgetStateProperty.resolveWith<Color?>(
         (Set<WidgetState> states) {
           if (index == hoveredIndex) {
@@ -269,11 +278,11 @@ class _DataSource extends DataTableSource {
         },
       ),
       cells: [
-        DataCell(Text(item.matricule!)),
-        DataCell(Text(item.assetType!)),
-        DataCell(Text("${item.lessor!.fname} " + " ${item.lessor!.lname}")),
-        DataCell(Text("${item.addedBy!.fname} " + " ${item.addedBy!.lname}")),
-        DataCell(Text("${item.ville} ," + " ${item.address}")),
+        DataCell(Text(item.asset?.matricule ?? item.basement!.matricule!)),
+        DataCell(Text(item.renter.fname)),
+        DataCell(Text("${item.cost}")),
+        DataCell(Text("${DateFormat("YY-MM-DD").format(item.startAt!)}")),
+        DataCell(Text("${DateFormat("YY-MM-DD").format(item.endAt!)}")),
       ],
       // onHover: (isHovered) {
       //   onHover(isHovered ? index : null);

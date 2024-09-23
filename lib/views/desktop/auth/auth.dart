@@ -69,11 +69,6 @@ class Auth extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            AppNavigator.push(context, destination: const MainScreen());
-          },
-          label: const Text("pass")),
     );
   }
 }

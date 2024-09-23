@@ -20,8 +20,10 @@ class BasementVm extends BaseVM<BasementModel> {
     final response = await http
         .get(Uri.parse("${endpoint}asset/building/basements"), headers: header);
     if (response.statusCode == 200) {
-      final body = jsonDecode(response.body) as List<Map<String, dynamic>>;
-      return body.map((data) => BasementModel.fromJson(data)).toList();
+      final List<dynamic> body = jsonDecode(response.body);
+      return body
+          .map((data) => BasementModel.fromJson(data as Map<String, dynamic>))
+          .toList();
     } else {
       throw HttpException("HTTP ${response.statusCode}: ${response.body}",
           uri: Uri.parse("${endpoint}asset/building/basements"));
@@ -34,7 +36,7 @@ class BasementVm extends BaseVM<BasementModel> {
 
     final response = await http.post(
         Uri.parse("${endpoint}asset/building/basement"),
-        body: data.toJsonWithoutId(),
+        body: jsonEncode(data.toJsonWithoutId()),
         headers: header);
   }
 
@@ -44,7 +46,7 @@ class BasementVm extends BaseVM<BasementModel> {
 
     final response = await http.post(
         Uri.parse("${endpoint}asset/building/basement"),
-        body: data.toJson(),
+        body: jsonEncode(data.toJson()),
         headers: header);
   }
 

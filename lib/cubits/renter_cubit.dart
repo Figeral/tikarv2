@@ -21,6 +21,8 @@ class RenterCubit extends Cubit<BaseState<List<RenterModel?>?>>
     emit(Loading());
     try {
       _renterVM.deleteData(id);
+      final _cache = await cache;
+      await _cache.clearAt(id);
       emit(Valid());
     } catch (e) {
       if (e is FormatException) {
@@ -29,8 +31,6 @@ class RenterCubit extends Cubit<BaseState<List<RenterModel?>?>>
         emit(Error(e.message));
       }
     }
-    final _cache = await cache;
-    await _cache.clearAt(id);
   }
 
   @override

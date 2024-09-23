@@ -4,39 +4,39 @@ import 'package:tikar/models/lessor_model.dart';
 
 class AssetModel extends Equatable {
   final int? id;
-  final LessorModel lessor;
+  final LessorModel? lessor;
   final StaffModel? addedBy;
   final int? numberOfFloors;
   final int? numberOfHalls;
-  final int surfaceArea;
-  final int estimatedValue;
+  final int? surfaceArea;
+  final int? estimatedValue;
   final String? matricule;
 
   final String? address;
   final String? ville;
   final String? description;
   final String? assetType;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final bool? isActive;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   final List<String?>? image;
 
   AssetModel(
       {this.id,
-      required this.lessor,
+      this.lessor,
       this.addedBy,
       this.numberOfFloors,
       this.numberOfHalls,
-      required this.surfaceArea,
-      required this.estimatedValue,
-      required this.matricule,
+      this.surfaceArea,
+      this.estimatedValue,
+      this.matricule,
       this.address,
       this.ville,
       this.description,
-      required this.assetType,
-      required this.isActive,
-      required this.createdAt,
-      required this.updatedAt,
+      this.assetType,
+      this.isActive,
+      this.createdAt,
+      this.updatedAt,
       this.image});
 
   factory AssetModel.fromJson(Map<String, dynamic> json) {
@@ -63,7 +63,7 @@ class AssetModel extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'lessor': lessor.toJson(),
+      'lessor': lessor?.toJson(),
       'addedBy': addedBy!
           .toJson(), // since  this logic is already processed in the server
       'matricule': matricule,
@@ -77,14 +77,14 @@ class AssetModel extends Equatable {
       'assetType': assetType,
       "image": image,
       'active': isActive,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      'createdAt': createdAt?.millisecondsSinceEpoch,
+      'updatedAt': updatedAt?.millisecondsSinceEpoch,
     };
   }
 
   Map<String, dynamic> toJsonWithoutId() {
     return {
-      'lessor': lessor.toJson(),
+      'lessor': lessor?.toJson(),
       'matricule': matricule,
       'surfaceArea': surfaceArea,
       'estimatedValue': estimatedValue,
@@ -96,8 +96,8 @@ class AssetModel extends Equatable {
       'assetType': assetType,
       "image": image,
       'active': isActive,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      'createdAt': createdAt?.millisecondsSinceEpoch,
+      'updatedAt': updatedAt?.millisecondsSinceEpoch,
     };
   }
 
@@ -164,24 +164,30 @@ class AssetModel extends Equatable {
 }
 
 class BasementModel extends Equatable {
-  final int id;
-  final StaffModel addedBy;
+  final int? id;
+  final StaffModel? addedBy;
   final AssetModel building;
   final String? description;
   final int surfaceArea;
   final int estimatedValue;
   final String? assetType;
   final int numberOfHalls;
+  final String? matricule;
   final String? type;
   final bool active;
-  List<String?>? image;
+  final List<String?>? image;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   BasementModel(
-      {required this.id,
-      required this.addedBy,
+      {this.id,
+      this.addedBy,
       required this.building,
       this.description,
       required this.surfaceArea,
       required this.estimatedValue,
+      required this.matricule,
+      required this.createdAt,
+      required this.updatedAt,
       this.assetType,
       required this.numberOfHalls,
       this.type,
@@ -191,32 +197,37 @@ class BasementModel extends Equatable {
   factory BasementModel.fromJson(Map<String, dynamic> json) {
     return BasementModel(
       id: json['id'],
-      addedBy: StaffModel.fromJson(json['addedBy']),
+      addedBy: StaffModel.fromJson(json['addedStaff']),
       building: AssetModel.fromJson(json['building']),
       description: json['description'],
       surfaceArea: json['surfaceArea'],
       image: json['image'],
       estimatedValue: json['estimatedValue'],
+      matricule: json['matricule'],
       assetType: json['assetType'],
       numberOfHalls: json['numberOfHalls'],
       type: json['type'],
       active: json['active'],
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'addedBy': addedBy.toJson(),
+      'addedStaff': addedBy?.toJson(),
       'building': building.toJson(),
       'description': description,
+      'matricule': matricule,
       "image": image,
       'surfaceArea': surfaceArea,
       'estimatedValue': estimatedValue,
-      'assetType': assetType,
       'numberOfHalls': numberOfHalls,
       'type': type,
       'active': active,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
@@ -232,13 +243,16 @@ class BasementModel extends Equatable {
       addedBy,
       building,
       description,
+      matricule,
       surfaceArea,
       estimatedValue,
       assetType,
       numberOfHalls,
       type,
       active,
-      image
+      image,
+      createdAt,
+      updatedAt
     ];
   }
 
@@ -253,8 +267,11 @@ class BasementModel extends Equatable {
     int? surfaceArea,
     int? estimatedValue,
     String? assetType,
+    String? matricule,
     int? numberOfHalls,
     List<String?>? image,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     String? type,
     bool? active,
   }) {
@@ -270,6 +287,9 @@ class BasementModel extends Equatable {
       numberOfHalls: numberOfHalls ?? this.numberOfHalls,
       type: type ?? this.type,
       active: active ?? this.active,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      matricule: matricule ?? this.matricule,
     );
   }
 }

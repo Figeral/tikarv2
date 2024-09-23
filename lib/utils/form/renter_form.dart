@@ -59,7 +59,7 @@ class _RenterFormState extends State<RenterForm> {
                       const Padding(
                         padding: const EdgeInsets.only(top: 18, bottom: 18),
                         child: Text(
-                          AppStrings.lessor_post_header,
+                          "Ajouter un Locataire",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,

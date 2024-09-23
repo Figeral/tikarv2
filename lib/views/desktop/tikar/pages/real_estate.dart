@@ -182,6 +182,7 @@ class _RealEstateState extends State<RealEstate> with TickerProviderStateMixin {
         data.where((e) => e!.assetType!.contains("Residence")).toList().length,
         data.where((e) => e!.assetType!.contains("Building")).toList().length,
       ],
+      
       selectedIndex: _selectedIndex,
       onSelected: (index) {
         setState(() {

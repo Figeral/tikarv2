@@ -25,6 +25,8 @@ class LessorCubit extends Cubit<BaseState<List<LessorModel?>?>>
     emit(Loading());
     try {
       _lessorVM.deleteData(id);
+      final _cache = await cache;
+      await _cache.clearAt(id);
       emit(Valid());
     } catch (e) {
       if (e is FormatException) {
@@ -33,8 +35,6 @@ class LessorCubit extends Cubit<BaseState<List<LessorModel?>?>>
         emit(Error(e.message));
       }
     }
-    final _cache = await cache;
-    await _cache.clearAt(id);
   }
 
   @override

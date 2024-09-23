@@ -21,7 +21,7 @@ Future<void> main(List<String> args) async {
   // final c = await SharedPreferences.getInstance();
   // c.clear();
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-    window_size.setWindowMinSize(const Size(1400, 900));
+    window_size.setWindowMinSize(const Size(1420, 900));
     window_size.setWindowMaxSize(Size.infinite);
   }
   runApp(const MyApp());

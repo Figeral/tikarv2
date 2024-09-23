@@ -288,7 +288,7 @@ class _AssetFormState extends State<AssetForm> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextFormField(
                                   controller: _textControllers[2],
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     suffixText: "FCFA",
                                     labelText: 'Valeur estimé',
                                     border: OutlineInputBorder(

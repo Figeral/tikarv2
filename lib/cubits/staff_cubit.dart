@@ -23,6 +23,8 @@ class StaffCubit extends Cubit<BaseState<List<StaffModel?>?>>
     emit(Loading());
     try {
       _staffVM.deleteData(id);
+      final _cache = await cache;
+      await _cache.clearAt(id);
       emit(Valid());
     } catch (e) {
       if (e is FormatException) {
@@ -31,8 +33,6 @@ class StaffCubit extends Cubit<BaseState<List<StaffModel?>?>>
         emit(Error(e.message));
       }
     }
-    final _cache = await cache;
-    await _cache.clearAt(id);
   }
 
   @override

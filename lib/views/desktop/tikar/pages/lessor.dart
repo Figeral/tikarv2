@@ -241,7 +241,7 @@ class _LessorState extends State<Lessor> with TickerProviderStateMixin {
                         offset: Offset(
                             dx * -_controller.value, dy * -_controller.value),
                         child: LessorForm(
-                          height: 600 * _controller.value,
+                          height: 400 * _controller.value,
                           width: 680 * _controller.value,
                         )),
                   )

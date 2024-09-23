@@ -22,6 +22,8 @@ class AssetCubit extends Cubit<BaseState<List<AssetModel?>?>>
     emit(Loading());
     try {
       _assetVM.deleteData(id);
+      final _cache = await cache;
+      await _cache.clearAt(id);
       emit(Valid());
     } catch (e) {
       if (e is FormatException) {
@@ -30,23 +32,25 @@ class AssetCubit extends Cubit<BaseState<List<AssetModel?>?>>
         emit(Error(e.message));
       }
     }
-    final _cache = await cache;
-    await _cache.clearAt(id);
   }
 
   @override
   void fetch() async {
     emit(Loading());
-    final data = await _assetVM.getData();
-    if (data.isNotEmpty) {
-      final _cache = await cache;
-      data.forEach((e) async {
-        await _cache.save(e);
-      });
-      _cache.getData().listen((e) {
-        emit(Success(e));
-      });
-    } else {
+    try {
+      final data = await _assetVM.getData();
+      if (data.isNotEmpty) {
+        final _cache = await cache;
+        data.forEach((e) async {
+          await _cache.save(e);
+        });
+        _cache.getData().listen((e) {
+          emit(Success(e));
+        });
+      } else {
+        emit(NotFound());
+      }
+    } catch (e) {
       emit(NotFound());
     }
   }

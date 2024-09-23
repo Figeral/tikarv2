@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikar/data/local_data_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class RentCubit extends Cubit<BaseState<List<RentModel?>?>>
     implements BaseCubit<RentModel> {
   RentCubit() : super(Initial());
@@ -24,6 +23,8 @@ class RentCubit extends Cubit<BaseState<List<RentModel?>?>>
     emit(Loading());
     try {
       _rentVM.deleteData(id);
+      final _cache = await cache;
+      await _cache.clearAt(id);
       emit(Valid());
     } catch (e) {
       if (e is FormatException) {
@@ -32,8 +33,6 @@ class RentCubit extends Cubit<BaseState<List<RentModel?>?>>
         emit(Error(e.message));
       }
     }
-    final _cache = await cache;
-    await _cache.clearAt(id);
   }
 
   @override

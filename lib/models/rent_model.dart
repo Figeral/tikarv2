@@ -3,11 +3,12 @@ import 'package:tikar/models/asset_model.dart';
 import 'package:tikar/models/renter_model.dart';
 
 class RentModel extends Equatable {
-  final int id;
+  final int? id;
   final DateTime? startAt;
   final DateTime? endAt;
   final AssetModel? asset;
   final BasementModel? basement;
+
   final DateTime createdAt;
   final DateTime updatedAt;
   final RenterModel renter;
@@ -15,7 +16,7 @@ class RentModel extends Equatable {
   final int cost;
 
   const RentModel({
-    required this.id,
+    this.id,
     this.startAt,
     this.endAt,
     this.asset,
@@ -30,12 +31,15 @@ class RentModel extends Equatable {
   factory RentModel.fromJson(Map<String, dynamic> json) {
     return RentModel(
       id: json['id'],
-      startAt: json['startAt'] != null ? DateTime.parse(json['startAt']) : null,
-      endAt: json['endAt'] != null ? DateTime.parse(json['endAt']) : null,
-      asset: json['asset'] != null ? AssetModel.fromJson(json['asset']) : null,
-      basement: json['basement'] != null
-          ? BasementModel.fromJson(json['basement'])
+      startAt: json['startAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json['startAt'])
           : null,
+      endAt: json['endAt'] != null
+          ? DateTime.fromMicrosecondsSinceEpoch(json['endAt'])
+          : null,
+      asset: json['asset'] != null ? AssetModel.fromJson(json['asset']) : null,
+      basement:
+          json['basement'] != null ? BasementModel.fromJson(json['basement']) : null,
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
       renter: RenterModel.fromJson(json['renter']),
@@ -47,10 +51,10 @@ class RentModel extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'startAt': startAt?.toIso8601String(),
-      'endAt': endAt?.toIso8601String(),
+      'startAt': startAt?..millisecondsSinceEpoch,
+      'endAt': endAt?..millisecondsSinceEpoch,
       'asset': asset?.toJson(),
-      'basement': basement?.toJson(),
+      "basement": basement?.toJson(),
       'createdAt': createdAt.millisecondsSinceEpoch,
       'updatedAt': updatedAt.millisecondsSinceEpoch,
       'renter': renter.toJson(),

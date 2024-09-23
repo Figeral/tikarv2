@@ -22,6 +22,8 @@ class BasementCubit extends Cubit<BaseState<List<BasementModel?>?>>
     emit(Loading());
     try {
       _basementVM.deleteData(id);
+      final _cache = await cache;
+      await _cache.clearAt(id);
       emit(Valid());
     } catch (e) {
       if (e is FormatException) {
@@ -30,8 +32,6 @@ class BasementCubit extends Cubit<BaseState<List<BasementModel?>?>>
         emit(Error(e.message));
       }
     }
-    final _cache = await cache;
-    await _cache.clearAt(id);
   }
 
   @override
