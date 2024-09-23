@@ -60,8 +60,8 @@ class _DesktopBoardingState extends State<DesktopBoarding> {
                   left: 20,
                   top: constraints.maxHeight / 2,
                   child: IconButton(
-                    icon: const Icon(Icons.chevron_left, color: Colors.white),
-                    iconSize: 48,
+                    icon: const Icon(Icons.chevron_left, color: AppColors.grey),
+                    iconSize: 80,
                     onPressed: () => _pageController.previousPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
@@ -73,8 +73,9 @@ class _DesktopBoardingState extends State<DesktopBoarding> {
                   right: 20,
                   top: constraints.maxHeight / 2,
                   child: IconButton(
-                    icon: const Icon(Icons.chevron_right, color: Colors.white),
-                    iconSize: 48,
+                    icon:
+                        const Icon(Icons.chevron_right, color: AppColors.grey),
+                    iconSize: 80,
                     onPressed: () => _pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeIn,
@@ -117,17 +118,17 @@ class _DesktopBoardingState extends State<DesktopBoarding> {
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: AppColors.black,
-                  fontSize: constraints.maxWidth * 0.02,
+                  fontSize: constraints.maxWidth * 0.015,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: constraints.maxHeight * 0.02),
+              SizedBox(height: constraints.maxHeight * 0.015),
               Text(
                 text,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.grey,
-                  fontSize: constraints.maxWidth * 0.015,
+                  fontSize: constraints.maxWidth * 0.010,
                 ),
                 textAlign: TextAlign.center,
               ),
