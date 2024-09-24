@@ -279,21 +279,33 @@ class _StaffFormState extends State<StaffForm> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             // Process data
-                            cubit.post(StaffModel(
-                                fname: _textControllers[0].value.text,
-                                lname: _textControllers[1].value.text,
-                                password: _textControllers[3].value.text,
-                                tel: int.parse(_textControllers[4].value.text),
-                                active: true,
-                                role: [_selectedRole!],
-                                post: _selectedJob!,
-                                email: _textControllers[2].value.text,
-                                username: _textControllers[2].value.text));
+                            try {
+                              cubit.post(StaffModel(
+                                  fname: _textControllers[0].value.text,
+                                  lname: _textControllers[1].value.text,
+                                  password: _textControllers[3].value.text,
+                                  tel:
+                                      int.parse(_textControllers[4].value.text),
+                                  active: true,
+                                  role: [_selectedRole!],
+                                  post: _selectedJob!,
+                                  email: _textControllers[2].value.text,
+                                  username: _textControllers[2].value.text));
 
-                            SnackBarMessenger.stateSnackMessenger(
-                                context: context,
-                                message: "processing data",
-                                type: "success");
+                              SnackBarMessenger.stateSnackMessenger(
+                                  context: context,
+                                  message: "processing data",
+                                  type: "success");
+                            } catch (e) {
+                              Navigator.of(context).pop();
+
+                              // // Show error message
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        'Error creating Staff: ${e.toString()}')),
+                              );
+                            }
                           }
                         },
                         child: Text(

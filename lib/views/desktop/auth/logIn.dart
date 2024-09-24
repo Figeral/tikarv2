@@ -130,6 +130,15 @@ class _LoginState extends State<Login> {
                     AppNavigator.push(context, destination: const MainScreen());
                     print("pushed to next page");
                   }
+                } else {
+                  Navigator.of(context).pop();
+
+                  // // Show error message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Error In LogIN in \n restart by changing username or password')),
+                  );
                 }
               },
               child: isLoding

@@ -201,19 +201,31 @@ class _LessorFormState extends State<LessorForm> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             // Process data
-                            _lessorCubit.post(LessorModel(
-                                fname: _textControllers[0].value.text,
-                                lname: _textControllers[1].value.text,
-                                gender: _selectedRole!,
-                                tel: int.parse(_textControllers[2].value.text),
-                                inCameroon: _isChecked,
-                                createdAt: DateTime.now(),
-                                updatedAt: DateTime.now()));
+                            try {
+                              _lessorCubit.post(LessorModel(
+                                  fname: _textControllers[0].value.text,
+                                  lname: _textControllers[1].value.text,
+                                  gender: _selectedRole!,
+                                  tel:
+                                      int.parse(_textControllers[2].value.text),
+                                  inCameroon: _isChecked,
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now()));
 
-                            SnackBarMessenger.stateSnackMessenger(
-                                context: context,
-                                message: "processing data",
-                                type: "success");
+                              SnackBarMessenger.stateSnackMessenger(
+                                  context: context,
+                                  message: "processing data",
+                                  type: "success");
+                            } catch (e) {
+                              Navigator.of(context).pop();
+
+                              // // Show error message
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        'Error creating Lessor: ${e.toString()}')),
+                              );
+                            }
                           }
                         },
                         child: Text(

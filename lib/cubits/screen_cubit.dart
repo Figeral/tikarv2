@@ -19,9 +19,8 @@ class ScreenCubit extends Cubit<BaseState> {
 
   void get authScreen async {
     emit(Loading());
-    bool? isTokenPresent =
-        await LocalCacheManager.getToken("user_token") != null;
-    if (isTokenPresent) {
+    final isTokenPresent = await LocalCacheManager.getToken("user_token");
+    if (isTokenPresent != null) {
       emit(Success(isTokenPresent));
     } else {
       emit(NotFound());

@@ -17,9 +17,9 @@ import 'package:window_size/window_size.dart' as window_size;
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  WidgetsFlutterBinding.ensureInitialized();
-  final c = await SharedPreferences.getInstance();
-  c.clear();
+
+  // final c = await SharedPreferences.getInstance();
+  // c.clear();
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     window_size.setWindowMinSize(const Size(1420, 900));
     window_size.setWindowMaxSize(Size.infinite);

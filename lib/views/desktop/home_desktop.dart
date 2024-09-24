@@ -26,9 +26,12 @@ class _DesktopHomeState extends State<DesktopHome> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ScreenCubit, BaseState>(builder: (context, state) {
-      context.read<ScreenCubit>().boardingScreen;
       return switch (state) {
-        Initial() => AppLoader.defaultLoader(),
+        Initial() => Builder(builder: (context) {
+            context.read<ScreenCubit>().boardingScreen;
+            return AppLoader.defaultLoader();
+          }),
+        Loading() => AppLoader.defaultLoader(),
         Success() => nextScreen(state.data),
         NotFound() => const DesktopBoarding(),
         _ => Container(),
@@ -37,10 +40,13 @@ class _DesktopHomeState extends State<DesktopHome> {
   }
 
   Widget nextScreen(bool status) {
-    context.read<ScreenCubit>().authScreen;
     return BlocBuilder<ScreenCubit, BaseState>(builder: (context, state) {
       return switch (state) {
-        Initial() => AppLoader.defaultLoader(),
+        Initial() => Builder(builder: (context) {
+            context.read<ScreenCubit>().authScreen;
+            return AppLoader.defaultLoader();
+          }),
+        Loading() => AppLoader.defaultLoader(),
         Success() => const MainScreen(),
         NotFound() => const Auth(),
         _ => Container(),

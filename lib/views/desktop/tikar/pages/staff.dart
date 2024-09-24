@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
@@ -160,13 +161,22 @@ class _StaffState extends State<Staff> with TickerProviderStateMixin {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 5),
                 child: IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.settings)),
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      "assets/images/settings.svg",
+                      width: 30,
+                      height: 30,
+                    )),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 5, right: 10),
                 child: IconButton(
                     onPressed: context.read<StaffCubit>().fetch,
-                    icon: const Icon(Icons.replay)),
+                    icon: SvgPicture.asset(
+                      "assets/images/reload.svg",
+                      width: 30,
+                      height: 30,
+                    )),
               )
             ],
           )

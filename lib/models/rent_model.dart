@@ -38,8 +38,9 @@ class RentModel extends Equatable {
           ? DateTime.fromMicrosecondsSinceEpoch(json['endAt'])
           : null,
       asset: json['asset'] != null ? AssetModel.fromJson(json['asset']) : null,
-      basement:
-          json['basement'] != null ? BasementModel.fromJson(json['basement']) : null,
+      basement: json['basement'] != null
+          ? BasementModel.fromJson(json['basement'])
+          : null,
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
       renter: RenterModel.fromJson(json['renter']),
@@ -51,8 +52,8 @@ class RentModel extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'startAt': startAt?..millisecondsSinceEpoch,
-      'endAt': endAt?..millisecondsSinceEpoch,
+      'startAt': startAt?.millisecondsSinceEpoch,
+      'endAt': endAt?.millisecondsSinceEpoch,
       'asset': asset?.toJson(),
       "basement": basement?.toJson(),
       'createdAt': createdAt.millisecondsSinceEpoch,

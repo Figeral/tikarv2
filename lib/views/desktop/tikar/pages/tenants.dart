@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:tikar/utils/app_colors.dart';
 import 'package:tikar/utils/app_string.dart';
@@ -105,9 +106,7 @@ class _TenantState extends State<Tenant> with TickerProviderStateMixin {
                           height: context.width * 0.6,
                           child: RenterPaginatedSortableTable(
                             data: _cubit,
-                            onTap: (RenterModel model) {
-                              print(model);
-                            },
+                            onTap: (RenterModel model) {},
                           ))
                     ],
                   ))
@@ -153,7 +152,7 @@ class _TenantState extends State<Tenant> with TickerProviderStateMixin {
             child: Text('/'),
           ),
           const Text(
-            'Staff',
+            'Locataires',
             style: TextStyle(
                 color: AppColors.blue,
                 fontSize: 20,
@@ -167,13 +166,22 @@ class _TenantState extends State<Tenant> with TickerProviderStateMixin {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 5),
                 child: IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.settings)),
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      "assets/images/settings.svg",
+                      width: 30,
+                      height: 30,
+                    )),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 5, right: 10),
                 child: IconButton(
                     onPressed: context.read<RenterCubit>().fetch,
-                    icon: const Icon(Icons.replay)),
+                    icon: SvgPicture.asset(
+                      "assets/images/reload.svg",
+                      width: 30,
+                      height: 30,
+                    )),
               )
             ],
           )

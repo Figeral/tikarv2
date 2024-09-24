@@ -144,8 +144,9 @@ class _DesktopBoardingState extends State<DesktopBoarding> {
 
   Widget button(BuildContext context, BoxConstraints constraints) {
     return ElevatedButton(
-      onPressed: () {
-        LocalCacheManager.setFlag(name: "onboarding_finished", value: true);
+      onPressed: () async {
+        await LocalCacheManager.setFlag(
+            name: "onboarding_finished", value: true);
         AppNavigator.push(context, destination: const Auth());
       },
       style: ElevatedButton.styleFrom(

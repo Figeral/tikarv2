@@ -21,7 +21,7 @@ class _SideBarState extends State<SideBar> {
   Widget build(BuildContext context) {
     return Container(
       padding:
-          EdgeInsets.symmetric(vertical: context.height * 0.15, horizontal: 25),
+          EdgeInsets.symmetric(vertical: context.height * 0.10, horizontal: 25),
       color: AppColors.white,
       child: ListView.builder(
         itemCount: data.menu.length,

@@ -10,9 +10,9 @@ class SnackBarMessenger {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: switch (type) {
-          "error" => Colors.red,
-          "success" => Colors.green,
-          _ => AppColors.grey
+          "error" => Colors.redAccent,
+          "success" => Colors.greenAccent,
+          _ => Colors.grey,
         },
         behavior: SnackBarBehavior.floating,
         content: Text(message),

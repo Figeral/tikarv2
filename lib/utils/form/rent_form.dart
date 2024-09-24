@@ -1297,10 +1297,11 @@ class _AddBasementRentState extends State<AddBasementRent> {
                               message: "Asset created successfully",
                               type: "success");
                         } catch (e) {
-                          SnackBarMessenger.stateSnackMessenger(
-                              context: context,
-                              message: e.toString(),
-                              type: "Error");
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Error creating Renting: ${e.toString()}')),
+                          );
                         }
                       }
                     },
