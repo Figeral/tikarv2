@@ -3,13 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Endpoint {
   static final localCache = SharedPreferences.getInstance();
-  static String login() =>
-      "https://tikarserver-production.up.railway.app/account/login";
-  static String signIn() =>
-      "https://tikarserver-production.up.railway.app/account/signin";
-  static String info() =>
-      "https://tikarserver-production.up.railway.app/account/info";
-  static String api() => "https://tikarserver-production.up.railway.app/api/";
+  static String login() => "https://tikar-server.onrender.com/account/login";
+  static String signIn() => "https://tikar-server.onrender.com/account/signin";
+  static String info() => "https://tikar-server.onrender.com/account/info";
+  static String api() => "https://tikar-server.onrender.com/api/";
 
   static Future<String?> get token async {
     final local = await localCache;
